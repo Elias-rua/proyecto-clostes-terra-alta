@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proyecto de closets y baños</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f5f2;--paper:#fff;--ink:#1d1d1b;--mute:#6f6c66;--line:#d9d6cf;--acc:#8a5a34;--warn:#c0392b;--ok:#2e7d4f}
+*{box-sizing:border-box}
+body{margin:0;font-family:"IBM Plex Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:28px 32px 12px;max-width:1200px;margin:0 auto}
+.room{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.rbtn{font:inherit;font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;color:var(--acc);background:none;border:1px solid var(--acc);border-radius:20px;padding:5px 12px;cursor:pointer}
+.rbtn.on{background:var(--acc);color:#fff}
+h1{font-size:24px;margin:2px 0 4px;font-weight:600}
+.sub{color:var(--mute);font-size:14px}
+main{max-width:1200px;margin:0 auto;padding:12px 32px 60px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5}
+.tab{border:1px solid var(--line);background:var(--paper);padding:8px 14px;border-radius:6px;cursor:pointer;font:inherit;font-size:14px}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:18px}
+.wallhead{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.wallhead h2{margin:0;font-size:19px;font-weight:600}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);font-weight:500;margin:24px 0 0}
+.badge{font-family:"IBM Plex Mono",monospace;font-size:12px;padding:4px 8px;border-radius:4px;background:#e5f3ea;color:var(--ok)}
+.badge.warn{background:#fff4d6;color:#8a6400}
+svg{width:100%;height:auto;display:block;margin-top:8px}
+.ref img{width:100%;border-radius:6px;border:1px solid var(--line);display:block;margin-top:10px}
+.ref figcaption{font-size:12px;color:var(--mute);margin-top:4px}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.led{background:#f5c518;height:4px!important;margin-top:4px;vertical-align:2px!important}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:500;color:var(--mute);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap}
+td small{color:var(--mute)}
+tfoot td{font-weight:600;border-bottom:none}
+.pc{color:#8a6400;font-size:12px}
+.notes{font-size:13px;color:var(--mute);margin-top:10px;line-height:1.5}
+.calc{font-family:"IBM Plex Mono",monospace;font-size:13px;background:#f6f5f2;border-radius:6px;padding:10px 12px;margin-top:12px;line-height:1.7}
+.edit{margin-top:14px}
+.edit summary{cursor:pointer;font-size:13px;color:var(--acc)}
+.edit input,.edit select{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--line);border-radius:4px;width:100%}
+.edit td{padding:4px}
+.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;padding:6px 10px;border-radius:5px;cursor:pointer}
+.sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px;font-size:13px;color:var(--mute)}
+.sign div{border-top:1px solid var(--ink);padding-top:6px}
+@media (max-width:800px){header,main{padding-left:16px;padding-right:16px}.sign{grid-template-columns:1fr}}
+.fin{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;border:0;background:#fff;padding:7px 14px;cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff}
+.sws{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sw{font:inherit;font-size:12px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:20px;padding:4px 10px 4px 5px;cursor:pointer}
+.sw.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.sw i{width:18px;height:18px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.15)}
+.sw input[type=color]{width:20px;height:20px;border:0;padding:0;background:none}
+.gr{font-size:12px;color:var(--mute);margin-left:6px}
+.pick{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.pick-sel{display:flex;gap:10px;align-items:center}
+.pick-sel img{width:44px;height:44px;border-radius:6px;object-fit:cover;border:1px solid var(--line)}
+.pick-sel small{display:block;color:var(--mute);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.pick-sel b{font-size:15px}
+.swgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;max-height:300px;overflow:auto;padding:2px}
+.swc{font:inherit;font-size:11px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px;cursor:pointer;text-align:center;position:relative}
+.swc img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:5px;display:block}
+.swc span{display:block;margin-top:4px;line-height:1.2}
+.swc em{position:absolute;top:6px;left:6px;font-style:normal;font-size:9px;background:rgba(0,0,0,.65);color:#fff;padding:1px 5px;border-radius:8px}
+.swc.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+#v3d{position:relative;width:100%;height:68vh;min-height:380px;margin-top:12px;border-radius:8px;overflow:hidden;background:#dedbd5;touch-action:none}
+#v3d canvas{display:block;width:100%;height:100%}
+.v3d-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:14px}
+.chip{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 12px;cursor:pointer}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.lbl{font-size:13px;color:var(--mute)}
+</style>
+</head>
+<body>
+<header>
+  <div class="room" id="proom"></div>
+  <h1 id="ptitle"></h1>
+  <div class="sub" id="psub"></div>
+</header>
+<main>
+  <div class="tabs" id="tabs"></div>
+  <div id="view"></div>
+  <div class="card">
+    <strong>Autorización del cliente</strong>
+    <div class="notes">Todas las medidas en centímetros. Los renders son del modelo 3D del proyecto; los planos con medidas indican cómo se despieza y distribuye cada mueble. <strong>Iluminación LED: misma especificación y ubicación que en los renders</strong>, en todos los muros. Favor de revisar y autorizar antes de fabricación.</div>
+    <div class="sign"><div>Nombre y firma del cliente</div><div>Fecha</div></div>
+  </div>
+</main>
+<script>
+/* ====== DATOS DEL PROYECTO ======
+   Módulos en orden de izquierda a derecha, viendo el muro de frente.
+   type: tubular | cajonero | zapatero | esquinero
+   esquinero: w = medida de respaldo (90), vis = frente visible (30), side = lado donde queda la esquina
+   shared = el esquinero es el mismo módulo que el de otro muro (no se fabrica dos veces)
+   gap = holgura de instalación (cm) y gapSide = lado donde queda                           */
+const PROJECT = {
+  id: "principal",
+  room: "Recámara principal",
+  title: "Closet y baño — Medidas para autorización",
+  subtitle: "Planta general y elevaciones por muro",
+  plan: {
+    render: "img/render-planta.jpg",
+    B: 318.5, C: 716, A: 368.5, lav: 363, seg219: 219,
+    /* Estimados a escala del render (≈) */
+    recess: 44.5,                 // = 363 − 318.5 (render ≈ 40)
+    door: { from: 15, w: 90 },    // marco desde la esquina del Muro C, ancho de puerta
+    doorToLav: 114.5,               // de la puerta al muro de lavabos
+    bath: { wc: 182, shower: 166, depth: 130 },  // bloque WC + regadera entre Muro A y tramo 219
+    plumbing: { fromC: 78, group: 22, between: 152, toEnd: 89 }
+  },
+  walls: [
+    {
+      id: "A", name: "Muro A — Frente del closet", render: "img/render-muro-a.jpg", finish: true,
+      length: 368.5, height: 210, gapSide: "izq",
+      adj: { der: "Muro B" },
+      modules: [
+        {label:"Tubular 1",  type:"tubular",  w:78,   h:210, d:60},
+        {label:"Cajonero 1", type:"cajonero", w:60,   h:210, d:60},
+        {label:"Cajonero 2", type:"cajonero", w:60,   h:210, d:60},
+        {label:"Tubular 2",  type:"tubular",  w:78.5, h:210, d:60},
+        {label:"Esquinero A-B", type:"esquinero", w:90, vis:30, h:210, d:60, side:"der"}
+      ],
+      notes: "Esquinero tubular en L de 90 × 90 (medida de respaldos, 60 de fondo) con tubo curvo continuo: de frente solo se ven 30 cm; los otros 60 son la esquina con el Muro B."
+    },
+    {
+      id: "B", name: "Muro B — Zapateros", render: "img/render-muro-b.jpg", finish: true,
+      length: 318.5, height: 210, gap: 1.5, gapSide: "der",
+      adj: { izq: "Muro A", der: "Muro C" },
+      modules: [
+        {label:"Esquinero A-B", type:"esquinero", w:90, vis:30, h:210, d:60, side:"izq", shared:"A"},
+        {label:"Zapatero 1",   type:"zapatero",  auto:true, h:210, d:60},
+        {label:"Zapatero 2",   type:"zapatero",  auto:true, h:210, d:60},
+        {label:"Esquinero B-C", type:"esquinero", w:90, vis:30, h:210, d:60, side:"der"}
+      ],
+      notes: "Se descuentan 1.5 cm de holgura de instalación (descuadres). Zapateros: 5 repisas extraíbles para zapato abajo y 3 repisas fijas arriba, como en el render. El Esquinero A-B es el mismo módulo que aparece en el Muro A."
+    },
+    {
+      id: "C", name: "Muro C — Closet y tocador",
+      length: 716, height: 210, gap: 1.5, gapSide: "der",
+      adj: { izq: "Muro B", der: "Muro lavabos" },
+      modules: [
+        {label:"Esquinero B-C", type:"esquinero", w:90, vis:30, h:210, d:60, side:"izq", shared:"B"},
+        {label:"Tubular 3",   type:"tubular",  w:78.5, h:210, d:60},
+        {label:"Cajonero 3",  type:"cajonero", w:60,   h:210, d:60},
+        {label:"Cajonero 4",  type:"cajonero", w:60,   h:210, d:60},
+        {label:"Tubular 4",   type:"tubular",  w:78,   h:210, d:60},
+        {label:"Doble tubular 5", type:"tubular", auto:true, h:210, d:60},
+        {label:"Doble tubular 6", type:"tubular", auto:true, h:210, d:60},
+        {label:"Entrepañero", type:"entrepanero", w:40, h:210, d:60},
+        {label:"Tocador",     type:"tocador",  w:80,   h:210, d:60}
+      ],
+      notes: "Primera parte espejo del Muro A (esquinero, 78.5, 60, 60, 78). Lo de en medio se reparte en partes iguales en dos dobles tubulares. Tocador: sin módulo, solo muro forrado de melamina y cajón flotado con cubierta (espejo no incluido). Entrepañero de 40 a toda la altura. Holgura de instalación de 1.5 cm."
+    },
+    {
+      id: "L", name: "Muro lavabos", render: "img/render-lavabos.jpg", low: true,
+      length: 363, height: 80, counter: {from:0, to:313, h:80, t:4, label:"Cubierta: triplay + cuarzo · tarjas bajo cubierta"},
+      pipes: [78,89,100,252,263,274],
+      modules: [
+        {label:"Fijo", type:"fijo", w:1.5, h:80, d:55},
+        {label:"Cajonero", type:"cajonbajo", w:40, h:80, d:55},
+        {label:"Cesto ropa sucia", type:"cesto", w:35, h:80, d:55},
+        {label:"Lavabo 1", type:"lavabo", w:85, h:80, d:55},
+        {label:"Cajones", type:"cajonbajo", w:31.5, h:80, d:55},
+        {label:"Lavabo 2", type:"lavabo", w:85, h:80, d:55},
+        {label:"Cesto ropa sucia", type:"cesto", w:35, h:80, d:55},
+        {label:"Vanity", type:"oculto", w:50, h:75, d:50, note:"Costado del vanity (fondo 50)", shared:"V"}
+      ],
+      calc: "Lavabo 1 arranca en 78 − 1.5 = 76.5 → cesto = 76.5 − 1.5 − 40 = <b>35</b><br>Lavabo 2 termina en 363 − 50 − 35 = 278 → arranca en 278 − 85 = 193<br>Cajones en medio = 193 − 161.5 = <b>31.5</b><br>Tuberías dentro: Lavabo 1 interior 78–160 (tubería 78–100 ✓) · Lavabo 2 interior 194.5–276.5 (tubería 252–274 ✓)",
+      notes: "Altura terminada 80 (cubierta de triplay + cuarzo, tarjas embutidas por debajo). Fondo de lavabos 55 (mueble + volado del cuarzo). Melamina de 1.5. El drenaje queda fuera del centro de cada mueble de lavabo (≈30 cm); el sifón se corre por dentro del mueble."
+    },
+    {
+      id: "V", name: "Vanity", render: "img/render-vanity.jpg", low: true,
+      length: 219, height: 75, counter: {from:0, to:219, h:75, t:4, label:"Cubierta de cuarzo a 75"},
+      modules: [
+        {label:"Esquina", type:"oculto", w:55, h:75, d:50, note:"Detrás del mueble de lavabo (fondo 55)"},
+        {label:"Cajonero", type:"cajonbajo", w:50, h:75, d:50},
+        {label:"Cajón largo", type:"vanity1", dh:15, w:114, h:75, d:50}
+      ],
+      calc: "Tramo 219 − esquina 55 (fondo de lavabos) − cajonero 50 = <b>114</b> de cajón largo",
+      notes: "Altura terminada 75 (5 cm más bajo que los lavabos). Fondo 50. Los primeros 55 quedan en la esquina detrás del mueble de lavabo (sin cajones, para que no choquen). Cajón largo flotado hasta el muro del baño, con frente de 15 cm."
+    }
+  ]
+};
+const ROOM1 = {
+  id: "rec1",
+  room: "Recámara 1",
+  title: "Closet y baño — Medidas para autorización",
+  subtitle: "Planta general y elevaciones por muro",
+  plan1: { render: "img/r1-planta.jpg", A: 236.9, B: 412, lav: 253, entryWall: 10, ret: 45, bathDoor: 72 },
+  walls: [
+    {
+      id: "A", name: "Muro A — Entrepañero y tubular", render: "img/r1-muro-a.jpg",
+      length: 236.9, height: 210, gap: 1.5, gapSide: "izq",
+      adj: { izq: "Muro lavabos", der: "Muro B" },
+      modules: [
+        {label:"Entrepañero", type:"entrepanero", w:40, h:210, d:60},
+        {label:"Doble tubular", type:"tubular", auto:true, h:210, d:60},
+        {label:"Esquinero A-B", type:"esquinero", w:90, vis:30, h:210, d:60, side:"der"}
+      ],
+      notes: "Lo de en medio es menos de 120, por eso queda un solo doble tubular (si fuera más de 120 se divide en dos). Holgura de instalación de 1.5 cm del lado del muro de lavabos."
+    },
+    {
+      id: "B", name: "Muro B — Zapateros y cajoneros", render: "img/r1-muro-b.jpg",
+      length: 412, height: 210, gap: 1.5, gapSide: "der",
+      adj: { izq: "Muro A", der: "Muro del baño" },
+      modules: [
+        {label:"Esquinero A-B", type:"esquinero", w:90, vis:30, h:210, d:60, side:"izq", shared:"A"},
+        {label:"Zapatero tubular 1", type:"zaptub", auto:true, h:210, d:60},
+        {label:"Cajonero 1", type:"cajonero", w:60, h:210, d:60},
+        {label:"Cajonero 2", type:"cajonero", w:60, h:210, d:60},
+        {label:"Zapatero tubular 2", type:"zaptub", auto:true, h:210, d:60}
+      ],
+      notes: "Zapatero tubular: tubo para colgar arriba y repisas para zapato abajo, como en el render. Cajoneros: 4 cajones abajo y repisas abiertas arriba. El Esquinero A-B es el mismo módulo del Muro A. Holgura de instalación 1.5 cm."
+    }
+  ],
+};
+ROOM1.walls.push({
+  id: "L", name: "Muro lavabos", render: "img/r1-lavabo.jpg",
+  length: 253, height: 210,
+  adj: { izq: "Muro de 45 (baño)", der: "Puerta de entrada" },
+  counter: {from:0, to:253, h:80, t:4, label:"Cubierta a 80 · 40 de fondo en vanity, 55 en lavabo"},
+  pipes: [168, 179.5, 191],
+  upper: [ {label:"Entrepañero", x:0, w:30, y0:80, h:130, d:40, sideways:true} ],
+  modules: [
+    {label:"Vanity", type:"vanity1", w:93, h:80, d:40},
+    {label:"Cajonero", type:"cajonbajo", w:40, h:80, d:55},
+    {label:"Lavabo", type:"lavabo", w:80, h:80, d:55},
+    {label:"Cajonero", type:"cajonbajo", w:40, h:80, d:55}
+  ],
+  calc: "Tuberías: 168 desde el muro de 45 y 62 desde la puerta → 253 − 168 − 62 = <b>23</b> de grupo (tubería · drenaje · tubería)<br>Lavabo: cajonero 40 + lavabo 80 + cajonero 40 = <b>160</b>, desde la puerta<br>Mueble de lavabo de 133 a 213 desde el muro de 45 → interior 134.5–211.5, tubería 168–191 ✓<br>Restan 253 − 160 = <b>93</b> de vanity (40 de fondo) · entrepañero de lado arriba de la cubierta (30 a lo largo del muro × 40 de fondo, alto 130), junto al muro de 45",
+  notes: "La cubierta corre a 80 en todo el muro: 55 de fondo en la zona de lavabo y baja a 40 donde empieza el vanity. Vanity con un solo cajón delgado arriba, libre abajo. El entrepañero arranca sobre la cubierta del vanity (de 80 a 210) y va de lado: es un módulo de 40 × 30 girado, así que ocupa 30 a lo largo del muro y 40 de fondo, y sus repisas abren hacia el lavabo."
+});
+const ROOM2 = {
+  id: "rec2",
+  room: "Recámara 2",
+  title: "Closet y baño — Medidas para autorización",
+  subtitle: "Planta general y elevaciones por muro",
+  plan2: { L: 418.7, W: 229, side: { wall: 70, door: 89 } },
+  walls: [
+    {
+      id: "A", name: "Muro A — Tubulares y cajoneros", render: "img/r2-muro-a.jpg",
+      length: 418.7, height: 210, gap: 3.7, gapSide: "ambos",
+      modules: [
+        {label:"Doble tubular 1", type:"tubular", auto:true, h:210, d:60},
+        {label:"Doble tubular 2", type:"tubular", auto:true, h:210, d:60},
+        {label:"Cajonero 1", type:"cajonero", w:60, h:210, d:60},
+        {label:"Cajonero 2", type:"cajonero", w:60, h:210, d:60},
+        {label:"Doble tubular 3", type:"tubular", auto:true, h:210, d:60},
+        {label:"Doble tubular 4", type:"tubular", auto:true, h:210, d:60}
+      ],
+      notes: "3.7 cm de juego de instalación (repartido 1.85 de cada lado). Los dos cajoneros de 60 van al centro y los 4 dobles tubulares son del mismo tamaño. Cajoneros con 4 cajones abajo y repisas abiertas arriba, como en el render."
+    },
+    {
+      id: "L", name: "Muro lavabos", render: "img/r2-lavabo.jpg",
+      length: 417.3, height: 210,
+      adj: { izq: "Muro lado baño", der: "Muro lado entrada" },
+      counter: {from:120, to:417.3, h:80, t:4, label:"Cubierta a 80 · 55 de fondo en lavabo, 40 en vanity"},
+      pipes: [180.5, 191.3, 202.1],
+      upper: [ {label:"Torre de entrepaños", x:387.3, w:30, y0:80, h:130, d:40, sideways:true} ],
+      modules: [
+        {label:"Zapatera 1", type:"zapfijo", w:60, h:210, d:55},
+        {label:"Zapatera 2", type:"zapfijo", w:60, h:210, d:55},
+        {label:"Cajonero", type:"cajonbajo", w:50, h:80, d:55},
+        {label:"Lavabo", type:"lavabo", w:80, h:80, d:55},
+        {label:"Cajonero", type:"cajonbajo", w:50, h:80, d:55},
+        {label:"Vanity", type:"vanity1", w:117.3, h:80, d:40}
+      ],
+      calc: "Zapatera doble 60 + 60 = 120 · cajonero 50 + lavabo 80 + cajonero 50 = 180<br>Vanity = 417.3 − 120 − 180 = <b>117.3</b> (40 de fondo: se remete 15 respecto a los 55 del lavabo)<br>Tuberías: 180.5 desde la zapatera y 215.2 desde el otro muro → grupo de <b>21.6</b><br>Mueble de lavabo de 170 a 250 → interior 171.5–248.5, tubería 180.5–202.1 ✓",
+      notes: "Zapatera doble de 55 de fondo a toda la altura, con repisas fijas. Vanity con un solo cajón arriba a todo lo ancho, libre abajo. Torre de entrepaños igual que en la Recámara 1: de lado sobre la cubierta, 30 a lo largo del muro × 40 de fondo × 130 de alto, abre hacia el lavabo."
+    }
+  ]
+};
+const ROOM3 = {
+  id: "rec3",
+  room: "Recámara 3",
+  title: "Closet y baño — Medidas para autorización",
+  subtitle: "Planta general y elevaciones por muro",
+  plan3: { render: "img/r3-planta.jpg", A: 355.4, zap: 113.5, recess: 60, lav: 241.9,
+           bath: { wall1: 41.4, door: 75, wall2: 64 }, entry: { wall1: 70, wall2: 84 } },
+  walls: [
+    {
+      id: "A", name: "Muro A — Tubulares y cajoneros", render: "img/r3-muro-a.jpg",
+      length: 355.4, height: 210, gap: 3.6, gapSide: "ambos",
+      modules: [
+        {label:"Doble tubular 1", type:"tubular", auto:true, h:210, d:60},
+        {label:"Doble tubular 2", type:"tubular", auto:true, h:210, d:60},
+        {label:"Cajonero 1", type:"cajonero", w:60, h:210, d:60},
+        {label:"Cajonero 2", type:"cajonero", w:60, h:210, d:60},
+        {label:"Doble tubular 3", type:"tubular", auto:true, h:210, d:60},
+        {label:"Doble tubular 4", type:"tubular", auto:true, h:210, d:60}
+      ],
+      notes: "3.6 cm de juego de instalación (1.8 de cada lado). Cajoneros de 60 al centro y 2 dobles tubulares de cada lado, todos del mismo tamaño."
+    },
+    {
+      id: "Z", name: "Zapateras", render: "img/r3-lavabo.jpg",
+      length: 113.5, height: 210, gap: 1.5, gapSide: "izq",
+      adj: { izq: "Muro del baño", der: "Remetimiento 60 (lavabo)" },
+      modules: [
+        {label:"Zapatera 1", type:"zapfijo", auto:true, h:210, d:40},
+        {label:"Zapatera 2", type:"zapfijo", auto:true, h:210, d:40}
+      ],
+      notes: "1.5 cm de margen del lado del muro del baño. Fondo de 40 (como en el render): con 55 de fondo la zapatera taparía parte de la puerta del baño, que empieza a 41.4 de este muro."
+    },
+    {
+      id: "L", name: "Muro lavabos", render: "img/r3-lavabo.jpg",
+      length: 241.9, height: 210,
+      adj: { izq: "Remetimiento 60", der: "Muro de la entrada" },
+      counter: {from:0, to:241.9, h:80, t:4, label:"Cubierta a 80 · 55 de fondo en lavabo, 40 en vanity"},
+      pipes: [73, 83.25, 93.5],
+      upper: [ {label:"Torre de entrepaños", x:221.9, w:20, y0:80, h:130, d:40, sideways:true} ],
+      modules: [
+        {label:"Cajonero", type:"cajonbajo", w:40, h:80, d:55},
+        {label:"Lavabo", type:"lavabo", w:70, h:80, d:55},
+        {label:"Cajonero", type:"cajonbajo", w:40, h:80, d:55},
+        {label:"Vanity", type:"vanity1", auto:true, h:80, d:40}
+      ],
+      calc: "Muro de lavabos = 355.4 − 113.5 = <b>241.9</b> (en la libreta: 242.?)<br>Cajonero 40 + lavabo 70 + cajonero 40 = 150 → vanity = 241.9 − 150 = <b>91.9</b><br>Tuberías: 73 desde el remetimiento y 148.4 desde el muro de la entrada → grupo de <b>20.5</b><br>Mueble de lavabo de 40 a 110 → interior 41.5–108.5, tubería 73–93.5 ✓",
+      notes: "Este muro está 60 cm más atrás que el de las zapateras. Vanity con un cajón arriba, 40 de fondo (se remete 15). Torre de entrepaños de lado sobre la cubierta: 20 a lo largo del muro × 40 de fondo × 130 de alto, abre hacia el lavabo."
+    }
+  ]
+};
+const ROOMH = {
+  id: "huespedes",
+  room: "Recámara huéspedes",
+  title: "Closet — Medidas para autorización",
+  subtitle: "Closet (el baño se agrega cuando estén las medidas)",
+  planH: { render: "img/rh-planta.jpg", extra: "img/rh-lavabo.jpg" },
+  walls: [
+    {
+      id: "C", name: "Closet", render: "img/rh-closet.jpg",
+      length: 235.6, height: 320, gap: 3, gapSide: "ambos",
+      modules: [
+        {label:"Doble tubular 1", type:"tubular", auto:true, h:210, d:60},
+        {label:"Doble tubular 2", type:"tubular", auto:true, h:210, d:60},
+        {label:"Cajonero", type:"cajonero", w:60, h:210, d:60},
+        {label:"Entrepañero", type:"entrepanero", w:40, h:210, d:60}
+      ],
+      upperRow: { y0: 210, h: 110, n: 3, label: "Perchero elevable", d: 60 },
+      calc: "Holgura 1.5 + 1.5 = 3 → 235.6 − 3 = <b>232.6</b> útiles<br>Abajo: 232.6 − entrepañero 40 − cajonero 60 = 132.6 → más de 120 → 2 dobles tubulares de <b>66.3</b><br>Arriba: 232.6 ÷ 3 = <b>77.53</b> cada perchero elevable<br>Alturas: abajo 210 (zoclo 10 + 200) · arriba 110 · total <b>320</b>",
+      notes: "Arriba va distribuido distinto que abajo: 3 percheros elevables iguales a todo lo ancho. Abajo: 2 dobles tubulares, cajonero (cajones abajo, repisas arriba) y entrepañero de 40 a la derecha."
+    }
+  ]
+};
+const ROOMS = { principal: PROJECT, rec1: ROOM1, rec2: ROOM2, rec3: ROOM3, huespedes: ROOMH };
+/* ================================= */
+
+const KEY_BASE="medidas_v23_";
+let roomId = (location.hash||"").replace("#","");
+if(!ROOMS[roomId]) roomId="principal";
+let KEY=KEY_BASE+roomId, data;
+function loadRoom(id){
+  roomId=id; KEY=KEY_BASE+id; data=null;
+  try{ data = JSON.parse(localStorage.getItem(KEY)) }catch(e){}
+  const base=ROOMS[id];
+  if(!data || data.title!==base.title || data.walls.length!==base.walls.length) data = structuredClone(base);
+  cur="planta";
+  try{ history.replaceState(null,"","#"+id) }catch(e){}
+}
+let cur = "planta";
+loadRoom(roomId);
+const save = ()=>{ try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){} };
+const TYPES = {elevable:"Perchero elevable", zapfijo:"Zapatera (repisas fijas)", vanity1:"Vanity (cajón delgado)", zaptub:"Zapatero tubular", fijo:"Fijo", cajonbajo:"Cajonero bajo", cesto:"Cesto ropa sucia", lavabo:"Mueble de lavabo", oculto:"Esquina / costado", flotado:"Cajón largo flotado", tubular:"Doble tubular", cajonero:"Cajonero", zapatero:"Zapatero", entrepanero:"Entrepañero", tocador:"Tocador (muro forrado + cajón flotado)", esquinero:"Esquinero tubular (L)"};
+const WOOD="#d9c2a5", WOOD_S="#7a5534", INNER="#efe4d4", LED="#f5c518", MONO='font-family="IBM Plex Mono"';
+const f1 = n => (Math.round(n*100)/100).toString();
+
+function mods(w){
+  const fixed=w.modules.filter(m=>!m.auto).reduce((a,m)=>a+m.w,0), n=w.modules.filter(m=>m.auto).length;
+  const each = n ? (w.length-(w.gap||0)-fixed)/n : 0;
+  return w.modules.map(m=> m.auto? {...m,w:Math.round(each*100)/100} : m);
+}
+function layout(w){ let x=0; return mods(w).map(m=>{ const o={...m,x}; x+=m.w; return o; }); }
+function runLen(w){ return mods(w).reduce((a,m)=>a+m.w,0); }
+function gapOf(w){ return w.length ? w.length-runLen(w) : 0; }
+
+function dimH(x1,x2,y,txt,below=true,col="#444",fs=12){
+  const t = below? 15 : -6;
+  return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${col}"/>
+  <line x1="${x1}" y1="${y-5}" x2="${x1}" y2="${y+5}" stroke="${col}"/><line x1="${x2}" y1="${y-5}" x2="${x2}" y2="${y+5}" stroke="${col}"/>
+  <text x="${(x1+x2)/2}" y="${y+t}" text-anchor="middle" font-size="${fs}" ${MONO} fill="${col}">${txt}</text>`;
+}
+function dimV(x,y1,y2,txt,left=true,col="#444",fs=12){
+  return `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${col}"/>
+  <line x1="${x-5}" y1="${y1}" x2="${x+5}" y2="${y1}" stroke="${col}"/><line x1="${x-5}" y1="${y2}" x2="${x+5}" y2="${y2}" stroke="${col}"/>
+  <text x="${left?x-8:x+8}" y="${(y1+y2)/2+4}" text-anchor="${left?"end":"start"}" font-size="${fs}" ${MONO} fill="${col}">${txt}</text>`;
+}
+const HATCH = id=>`<pattern id="${id}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#b7aa98" stroke-width="2"/></pattern>`;
+
+/* L de esquinero en planta. (ox,oy) = esquina de los muros; ux,uy = dirección a lo largo del muro A del L; vx,vy = dirección del otro brazo */
+function cornerL(X,Y,ox,oy,ax,ay,bx,by,s,dep){
+  const P=(a,b)=>[ox+ax*a+bx*b, oy+ay*a+by*b];
+  const pts=[P(0,0),P(s,0),P(s,dep),P(dep,dep),P(dep,s),P(0,s)];
+  const c=dep/2, r=14;
+  const p1=P(s-2,c), p2=P(c+r,c), q=P(c,c), p3=P(c,c+r), p4=P(c,s-2);
+  return `<polygon points="${pts.map(p=>X(p[0])+","+Y(p[1])).join(" ")}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+  <path d="M ${X(p1[0])} ${Y(p1[1])} L ${X(p2[0])} ${Y(p2[1])} Q ${X(q[0])} ${Y(q[1])} ${X(p3[0])} ${Y(p3[1])} L ${X(p4[0])} ${Y(p4[1])}" fill="none" stroke="#555" stroke-width="3" stroke-linecap="round"/>`;
+}
+
+/* -------- Planta general -------- */
+function roomPlan(){
+  const r=data.plan, S=1.2, PL=170, PT=150, R=r.recess;
+  const L = r.C + r.door.from + r.door.w + r.doorToLav;           // largo total ≈
+  const bx0 = r.A, bx1 = r.A + r.bath.wc + r.bath.shower;         // bloque baño
+  const X=c=>PL+c*S, Y=c=>PT+(c+R)*S;
+  const EST="#c26a00";
+  const VW = L*S+PL+150, VH = (r.B+R)*S+PT+130;
+  let g=`<svg viewBox="0 0 ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg"><defs>${HATCH("hp")}</defs>`;
+  const poly=[[0,0],[r.C,0],[r.C,-R],[L,-R],[L,r.B],[0,r.B]];
+  g+=`<polygon points="${poly.map(p=>X(p[0])+","+Y(p[1])).join(" ")}" fill="#f7f6f3"/>`;
+  const wall=(a,b,c,d,col="#1d1d1b")=>`<line x1="${X(a)}" y1="${Y(b)}" x2="${X(c)}" y2="${Y(d)}" stroke="${col}" stroke-width="6" stroke-linecap="square"/>`;
+  const dx0=r.C+r.door.from, dx1=dx0+r.door.w;
+  g+=wall(0,0,r.C,0)+wall(r.C,0,r.C,-R)+wall(r.C,-R,dx0,-R)+wall(dx1,-R,L,-R)+wall(L,-R,L,r.B)+wall(0,r.B,L,r.B)+wall(0,0,0,r.B);
+  // puerta (abatimiento)
+  g+=`<line x1="${X(dx0)}" y1="${Y(-R)}" x2="${X(dx0)}" y2="${Y(-R+r.door.w)}" stroke="${EST}" stroke-width="2"/>
+  <path d="M ${X(dx0)} ${Y(-R+r.door.w)} A ${r.door.w*S} ${r.door.w*S} 0 0 0 ${X(dx1)} ${Y(-R)}" fill="none" stroke="${EST}" stroke-dasharray="4 3"/>
+  <text x="${X((dx0+dx1)/2)+10}" y="${Y(-R)+34}" text-anchor="middle" font-size="11" fill="${EST}">Puerta</text>`;
+  // bloque WC + regadera
+  const by0=r.B-r.bath.depth, bm=bx0+r.bath.wc;
+  g+=`<rect x="${X(bx0)}" y="${Y(by0)}" width="${(bx1-bx0)*S}" height="${r.bath.depth*S}" fill="#eceae6"/>
+  ${[bx0,bm,bx1].map(xx=>`<line x1="${X(xx)}" y1="${Y(by0)}" x2="${X(xx)}" y2="${Y(r.B)}" stroke="#666" stroke-width="5"/>`).join("")}
+  <line x1="${X(bx0)}" y1="${Y(by0)}" x2="${X(bx1)}" y2="${Y(by0)}" stroke="#8aa0a8" stroke-width="2" stroke-dasharray="8 4"/>
+  <ellipse cx="${X(bx0+r.bath.wc/2)}" cy="${Y(r.B-35)}" rx="${18*S}" ry="${26*S}" fill="#fff" stroke="#999"/>
+  <rect x="${X(bx0+r.bath.wc/2)-20*S}" y="${Y(r.B-12)}" width="${40*S}" height="${10*S}" fill="#fff" stroke="#999"/>
+  <text x="${X(bx0+r.bath.wc/2)}" y="${Y(by0)+18}" text-anchor="middle" font-size="12" font-weight="600">WC</text>
+  <text x="${X(bm+r.bath.shower/2)}" y="${Y(by0)+18}" text-anchor="middle" font-size="12" font-weight="600">Regadera</text>
+  <text x="${X(bm+r.bath.shower/2)}" y="${Y(by0)+34}" text-anchor="middle" font-size="10" fill="#6f6c66">cancel de vidrio</text>`;
+  const dep=60;
+
+  // ---- Muro A
+  const wA = data.walls.find(w=>w.id==="A");
+  let x=0;
+  [...wA.modules].reverse().forEach(m=>{
+    if(m.type==="esquinero"){ g+=cornerL(X,Y,0,r.B,1,0,0,-1,m.w,dep)+`<text x="${X(m.w/2)+12}" y="${Y(r.B-dep/2)+16}" text-anchor="middle" font-size="10">Esq. A-B</text>`; x+=m.w; return; }
+    g+=`<rect x="${X(x)}" y="${Y(r.B-dep)}" width="${m.w*S}" height="${dep*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <text x="${X(x+m.w/2)}" y="${Y(r.B-dep/2)+4}" text-anchor="middle" font-size="10">${m.label}</text>`;
+    if(m.type==="tubular") g+=`<line x1="${X(x)+3}" y1="${Y(r.B-dep/2)-10}" x2="${X(x+m.w)-3}" y2="${Y(r.B-dep/2)-10}" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>`;
+    x+=m.w;
+  });
+  x=0; [...wA.modules].reverse().forEach(m=>{ g+=dimH(X(x),X(x+m.w),Y(r.B)+30,f1(m.w),true,"#8a5a34",10); x+=m.w; });
+
+  // ---- Muro B
+  const wB = data.walls.find(w=>w.id==="B");
+  let y=r.B;
+  mods(wB).forEach(m=>{
+    if(m.type==="esquinero"){
+      if(!m.shared){ g+=cornerL(X,Y,0,y-m.w,0,1,1,0,m.w,dep)+`<text x="${X(dep/2)+18}" y="${Y(y-m.w+dep/2)+18}" text-anchor="middle" font-size="10">Esq. B-C</text>`; }
+      y-=m.w; return;
+    }
+    g+=`<rect x="${X(0)}" y="${Y(y-m.w)}" width="${dep*S}" height="${m.w*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <text transform="translate(${X(dep/2)+4},${Y(y-m.w/2)}) rotate(-90)" text-anchor="middle" font-size="10">${m.label}</text>`;
+    y-=m.w;
+  });
+  y=r.B; mods(wB).forEach(m=>{ g+=dimV(X(0)-16,Y(y-m.w),Y(y),f1(m.w),true,"#8a5a34",10); y-=m.w; });
+
+  // ---- Muro C
+  const wC = data.walls.find(w=>w.id==="C");
+  if(wC){
+    x=0;
+    mods(wC).forEach(m=>{
+      if(m.type==="esquinero"){ x+=m.w; return; }
+      g+=`<rect x="${X(x)}" y="${Y(0)}" width="${m.w*S}" height="${dep*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>`;
+      if(m.type==="tubular") g+=`<line x1="${X(x)+3}" y1="${Y(dep/2)+10}" x2="${X(x+m.w)-3}" y2="${Y(dep/2)+10}" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>`;
+      const lab = m.type==="entrepanero" ? "Ent." : m.label.replace("Doble tubular","D. tub.").replace("Cajonero","Caj.").replace("Tubular","Tub.");
+      g+=`<text x="${X(x+m.w/2)}" y="${Y(dep/2)-2}" text-anchor="middle" font-size="9">${lab}</text>`;
+      x+=m.w;
+    });
+    x=0; mods(wC).forEach(m=>{ g+=dimH(X(x),X(x+m.w),Y(0)-14,f1(m.w),false,"#8a5a34",10); x+=m.w; });
+  }
+
+  // ---- Muebles de lavabos (sobre muro x=L, desde la esquina de la puerta y=-R) y vanity (sobre y=r.B)
+  const wL=data.walls.find(w=>w.id==="L"), wV=data.walls.find(w=>w.id==="V");
+  if(wL){ let yy=-R;
+    mods(wL).forEach(m=>{
+      if(m.type!=="oculto"){
+        g+=`<rect x="${X(L-m.d)}" y="${Y(yy)}" width="${m.d*S}" height="${m.w*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.2"/>`;
+        if(m.type==="lavabo") g+=`<rect x="${X(L-m.d+10)}" y="${Y(yy+m.w/2-24)}" width="${34*S}" height="${48*S}" rx="7" fill="#fff" stroke="#999"/>`;
+      }
+      yy+=m.w; });
+  }
+  if(wV){ let xx=L;
+    mods(wV).forEach(m=>{
+      g+=`<rect x="${X(xx-m.w)}" y="${Y(r.B-m.d)}" width="${m.w*S}" height="${m.d*S}" fill="${m.type==="oculto"?"#e9e0d2":INNER}" stroke="${WOOD_S}" stroke-width="1.2"/>
+      <text x="${X(xx-m.w/2)}" y="${Y(r.B-m.d/2)+4}" text-anchor="middle" font-size="9">${m.type==="oculto"?"":m.label}</text>`;
+      xx-=m.w; });
+    g+=`<text x="${X(L-110)}" y="${Y(r.B-50)-6}" text-anchor="middle" font-size="11" font-weight="600">Vanity</text>`;
+  }
+
+  // ---- tubería lavabos (muro x = L, desde la esquina del lado de la puerta)
+  const p=r.plumbing, g1=-R+p.fromC, g2=g1+p.group+p.between;
+  [[g1,"Lavabo 1"],[g2,"Lavabo 2"]].forEach(([y0,lbl])=>{
+    g+=`<circle cx="${X(L)-8}" cy="${Y(y0)}" r="4" fill="#3a78c2"/><circle cx="${X(L)-8}" cy="${Y(y0+p.group/2)}" r="5.5" fill="#555"/><circle cx="${X(L)-8}" cy="${Y(y0+p.group)}" r="4" fill="#3a78c2"/>
+        `;
+  });
+  const xd=X(L)+24; let yy=-R;
+  [[p.fromC,""],[p.group,"#3a78c2"],[p.between,""],[p.group,"#3a78c2"],[p.toEnd,""]].forEach(([v,c])=>{ g+=dimV(xd,Y(yy),Y(yy+v),f1(v),false,c||"#444",10); yy+=v; });
+  g+=dimV(xd+50,Y(-R),Y(r.B),r.lav,false);
+
+  // ---- cotas generales
+  g+=dimH(X(0),X(r.C),Y(-R)-40,`Muro C: ${r.C}`,false);
+  g+=dimH(X(r.C),X(dx0),Y(-R)-14,"≈"+r.door.from,false,EST,10);
+  g+=dimH(X(dx0),X(dx1),Y(-R)-14,"≈"+r.door.w+" puerta",false,EST,10);
+  g+=dimH(X(dx1),X(L),Y(-R)-14,"≈"+r.doorToLav,false,EST,10);
+  g+=dimV(X(r.C)+14,Y(-R),Y(0),"≈"+R,false,EST,10);
+  g+=dimH(X(0),X(L),Y(-R)-70,`Largo total ≈ ${f1(L)}`,false,EST);
+  g+=dimV(PL-70,Y(0),Y(r.B),`Muro B: ${r.B}`,true);
+  g+=dimH(X(0),X(r.A),Y(r.B)+62,`Muro A: ${r.A}`,true);
+  g+=dimH(X(bx0),X(bm),Y(r.B)+30,"WC ≈"+r.bath.wc,true,EST,10);
+  g+=dimH(X(bm),X(bx1),Y(r.B)+30,"Regadera ≈"+r.bath.shower,true,EST,10);
+  g+=dimH(X(bx0),X(bx1),Y(r.B)+62,"Baño ≈"+f1(bx1-bx0),true,EST);
+  g+=dimH(X(bx1),X(L),Y(r.B)+62,`Tramo ${f1(L-bx1)}`,true);
+  g+=dimV(X(bx0)-10,Y(by0),Y(r.B),"≈"+r.bath.depth,true,EST,10);
+  const lbl=(x,y,t,rot=0)=>`<text transform="translate(${x},${y}) rotate(${rot})" text-anchor="middle" font-size="12" font-weight="600" fill="#1d1d1b">${t}</text>`;
+  g+=lbl(X(r.C*0.45),Y(60)+18,"Muro C");
+  g+=lbl(X(r.A/2)+40,Y(r.B)-dep*S-10,"Muro A");
+  g+=lbl(X(dep)+16,Y(r.B/2),"Muro B",90);
+  g+=lbl(X(L)-70,Y((r.B-R)/2-30),"Muro lavabos",-90);
+  return g+"</svg>";
+}
+
+/* -------- Planta recámara 1 -------- */
+function roomPlan1(){
+  const r=data.plan1, S=1.5, PL=150, PT=150;
+  const X=c=>PL+c*S, Y=c=>PT+c*S;
+  const W=r.A, H=r.B, dep=60;
+  let g=`<svg viewBox="0 0 ${W*S+PL+290} ${H*S+PT+110}" xmlns="http://www.w3.org/2000/svg"><defs>${HATCH("hq")}</defs>
+  <rect x="${X(0)}" y="${Y(0)}" width="${W*S}" height="${H*S}" fill="#f7f6f3"/>`;
+  const wall=(a,b,c,d,dash)=>`<line x1="${X(a)}" y1="${Y(b)}" x2="${X(c)}" y2="${Y(d)}" stroke="#1d1d1b" stroke-width="${dash?2:6}" ${dash?'stroke-dasharray="6 4"':""} stroke-linecap="square"/>`;
+  const EST="#c26a00";
+  const dEnt0 = H-dep-r.entryWall;           // donde empieza la puerta de entrada (desde arriba)
+  const entry = dEnt0 - r.lav;               // ancho de la puerta de entrada (calculado)
+  const bd0 = W-r.ret, bd1 = bd0-r.bathDoor; // puerta del baño en el muro de arriba
+  g+=wall(0,H,W,H)+wall(0,0,0,H)+wall(W,dEnt0,W,H)+wall(W,0,W,r.lav)+wall(W,0,bd0,0)+wall(bd1,0,0,0);
+  // puerta de entrada
+  g+=`<line x1="${X(W)}" y1="${Y(dEnt0)}" x2="${X(W-entry)}" y2="${Y(dEnt0)}" stroke="${EST}" stroke-width="2"/>
+  <path d="M ${X(W-entry)} ${Y(dEnt0)} A ${entry*S} ${entry*S} 0 0 1 ${X(W)} ${Y(r.lav)}" fill="none" stroke="${EST}" stroke-dasharray="4 3"/>
+  <text x="${X(W)+14}" y="${Y((dEnt0+r.lav)/2)+4}" font-size="11" fill="${EST}">Puerta de entrada</text>`;
+  // puerta del baño
+  g+=`<line x1="${X(bd1)}" y1="${Y(0)}" x2="${X(bd1)}" y2="${Y(-r.bathDoor)}" stroke="${EST}" stroke-width="2"/>
+  <path d="M ${X(bd1)} ${Y(-r.bathDoor)} A ${r.bathDoor*S} ${r.bathDoor*S} 0 0 1 ${X(bd0)} ${Y(0)}" fill="none" stroke="${EST}" stroke-dasharray="4 3"/>
+  <text x="${X(bd1)-8}" y="${Y(-40)}" text-anchor="end" font-size="11" fill="${EST}">Puerta del baño</text>
+  <text x="${X(W/2)}" y="${Y(-r.bathDoor)-14}" text-anchor="middle" font-size="12" fill="#6f6c66">BAÑO</text>`;
+  // cotas lado derecho y arriba
+  const xr=X(W)+150;
+  g+=dimV(xr,Y(0),Y(r.lav),`${r.lav} muro lavabos`,false);
+  g+=dimV(xr,Y(r.lav),Y(dEnt0),`≈${f1(entry)} puerta`,false,EST);
+  g+=dimV(xr,Y(dEnt0),Y(H-dep),`≈${r.entryWall}`,false,EST);
+  g+=dimV(xr,Y(H-dep),Y(H),`${dep} mueble Muro A`,false);
+  g+=dimH(X(bd0),X(W),Y(0)-14,`${r.ret}`,false);
+  g+=dimH(X(bd1),X(bd0),Y(0)-14,`≈${r.bathDoor}`,false,EST);
+  g+=dimH(X(0),X(bd1),Y(0)-14,`≈${f1(bd1)}`,false,EST);
+  // Muro A (abajo): desde el Muro B (x=0), orden inverso
+  const wA=data.walls.find(w=>w.id==="A"); let x=0;
+  [...mods(wA)].reverse().forEach(m=>{
+    if(m.type==="esquinero"){ g+=cornerL(X,Y,0,H,1,0,0,-1,m.w,dep)+`<text x="${X(m.w/2)+10}" y="${Y(H-dep/2)+16}" text-anchor="middle" font-size="10">Esq. A-B</text>`; x+=m.w; return; }
+    g+=`<rect x="${X(x)}" y="${Y(H-dep)}" width="${m.w*S}" height="${dep*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <text x="${X(x+m.w/2)}" y="${Y(H-dep/2)+4}" text-anchor="middle" font-size="10">${m.type==="entrepanero"?"Entrep.":m.label}</text>`;
+    if(m.type==="tubular") g+=`<line x1="${X(x)+3}" y1="${Y(H-dep/2)-12}" x2="${X(x+m.w)-3}" y2="${Y(H-dep/2)-12}" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>`;
+    x+=m.w; });
+  x=0; [...mods(wA)].reverse().forEach(m=>{ g+=dimH(X(x),X(x+m.w),Y(H)+26,f1(m.w),true,"#8a5a34",11); x+=m.w; });
+  const gA=gapOf(wA); if(gA>0) g+=dimH(X(x),X(W),Y(H)+26,f1(gA),true,"#2e7d4f",10);
+  // Muro B (izquierda): desde el Muro A hacia arriba
+  const wB=data.walls.find(w=>w.id==="B"); let y=H;
+  mods(wB).forEach(m=>{
+    if(m.type==="esquinero"){ y-=m.w; return; }
+    g+=`<rect x="${X(0)}" y="${Y(y-m.w)}" width="${dep*S}" height="${m.w*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <text transform="translate(${X(dep/2)+4},${Y(y-m.w/2)}) rotate(-90)" text-anchor="middle" font-size="10">${m.label}</text>`;
+    if(m.type==="zaptub") g+=`<line x1="${X(dep/2)+12}" y1="${Y(y-m.w)+4}" x2="${X(dep/2)+12}" y2="${Y(y)-4}" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>`;
+    y-=m.w; });
+  y=H; mods(wB).forEach(m=>{ g+=dimV(X(0)-16,Y(y-m.w),Y(y),f1(m.w),true,"#8a5a34",11); y-=m.w; });
+  const gB=gapOf(wB); if(gB>0) g+=dimV(X(0)-16,Y(0),Y(y),f1(gB),true,"#2e7d4f",10);
+  // muro lavabos pendiente
+  const wL=data.walls.find(w=>w.id==="L");
+  if(wL){ let yy=0;
+    mods(wL).forEach(m=>{
+      g+=`<rect x="${X(W-m.d)}" y="${Y(yy)}" width="${m.d*S}" height="${m.w*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>`;
+      if(m.type==="lavabo") g+=`<rect x="${X(W-m.d+8)}" y="${Y(yy+m.w/2-22)}" width="${36*S}" height="${44*S}" rx="7" fill="#fff" stroke="#999"/>`;
+      else g+=`<text transform="translate(${X(W-m.d/2)+4},${Y(yy+m.w/2)}) rotate(90)" text-anchor="middle" font-size="10">${m.label}</text>`;
+      g+=dimV(X(W)+16,Y(yy),Y(yy+m.w),f1(m.w),false,"#8a5a34",10);
+      yy+=m.w; });
+    (wL.upper||[]).forEach(u=>{ g+=`<rect x="${X(W-u.d)+3}" y="${Y(u.x)+3}" width="${u.d*S-6}" height="${u.w*S-6}" fill="none" stroke="#555" stroke-dasharray="5 4"/>
+      ${u.sideways?`<line x1="${X(W-u.d)+3}" y1="${Y(u.x+u.w)-3}" x2="${X(W)-3}" y2="${Y(u.x+u.w)-3}" stroke="#c26a00" stroke-width="3"/>`:""}`; });
+    (wL.pipes||[]).forEach((py,k)=>{ g+=`<circle cx="${X(W)-5}" cy="${Y(py)}" r="${k===1?5:3.5}" fill="${k===1?"#555":"#3a78c2"}"/>`; });
+  }
+  // cotas
+  g+=dimH(X(0),X(W),Y(H)+62,`Muro A: ${W}`,true);
+  g+=dimV(PL-62,Y(0),Y(H),`Muro B: ${H}`,true);
+
+  const lbl=(x,y,t,rot=0)=>`<text transform="translate(${x},${y}) rotate(${rot})" text-anchor="middle" font-size="12" font-weight="600">${t}</text>`;
+  g+=lbl(X(W/2-20),Y(H-dep)-10,"Muro A")+lbl(X(dep)+16,Y(H/2),"Muro B",90);
+  return g+"</svg>";
+}
+
+/* -------- Planta recámara 2 -------- */
+function roomPlan2(){
+  const r=data.plan2, S=1.55, PL=110, PT=110, L=r.L, W=r.W;
+  const X=c=>PL+c*S, Y=c=>PT+c*S, EST="#c26a00";
+  let g=`<svg viewBox="0 0 ${L*S+PL+120} ${W*S+PT+130}" xmlns="http://www.w3.org/2000/svg"><defs>${HATCH("h2")}</defs>
+  <rect x="${X(0)}" y="${Y(0)}" width="${L*S}" height="${W*S}" fill="#f7f6f3"/>`;
+  const wall=(a,b,c,d)=>`<line x1="${X(a)}" y1="${Y(b)}" x2="${X(c)}" y2="${Y(d)}" stroke="#1d1d1b" stroke-width="6" stroke-linecap="square"/>`;
+  const d0=r.side.wall, d1=d0+r.side.door;
+  g+=wall(0,0,L,0)+wall(0,W,L,W)+wall(0,0,0,d0)+wall(0,d1,0,W)+wall(L,0,L,d0)+wall(L,d1,L,W);
+  // puertas
+  g+=`<line x1="${X(0)}" y1="${Y(d0)}" x2="${X(-r.side.door)}" y2="${Y(d0)}" stroke="${EST}" stroke-width="2"/>
+  <path d="M ${X(-r.side.door)} ${Y(d0)} A ${r.side.door*S} ${r.side.door*S} 0 0 0 ${X(0)} ${Y(d1)}" fill="none" stroke="${EST}" stroke-dasharray="4 3"/>
+  <text transform="translate(${X(0)-14},${Y((d0+d1)/2)}) rotate(-90)" text-anchor="middle" font-size="11" fill="${EST}">Entrada</text>
+  <line x1="${X(L)}" y1="${Y(d0)}" x2="${X(L+r.side.door*0.6)}" y2="${Y(d0)}" stroke="${EST}" stroke-width="2"/>
+  <text transform="translate(${X(L)+14},${Y((d0+d1)/2)}) rotate(90)" text-anchor="middle" font-size="11" fill="${EST}">Baño</text>`;
+  // Muro A (arriba), izquierda = oeste
+  const wA=data.walls.find(w=>w.id==="A"), gA=gapOf(wA);
+  let x=gA/2;
+  mods(wA).forEach(m=>{
+    g+=`<rect x="${X(x)}" y="${Y(0)}" width="${m.w*S}" height="${m.d*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <text x="${X(x+m.w/2)}" y="${Y(m.d/2)+4}" text-anchor="middle" font-size="10">${m.label.replace("Doble tubular","D. tubular")}</text>`;
+    if(m.type==="tubular") g+=`<line x1="${X(x)+3}" y1="${Y(m.d/2)-12}" x2="${X(x+m.w)-3}" y2="${Y(m.d/2)-12}" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>`;
+    g+=dimH(X(x),X(x+m.w),Y(0)-16,f1(m.w),false,"#8a5a34",11); x+=m.w; });
+  g+=dimH(X(0),X(gA/2),Y(0)-16,f1(gA/2),false,"#2e7d4f",9)+dimH(X(L-gA/2),X(L),Y(0)-16,f1(gA/2),false,"#2e7d4f",9);
+  // Muro lavabos (abajo): su izquierda (vista de frente) = este
+  const wL=data.walls.find(w=>w.id==="L"); let ex=0;
+  mods(wL).forEach(m=>{
+    const px=L-ex-m.w;
+    g+=`<rect x="${X(px)}" y="${Y(W-m.d)}" width="${m.w*S}" height="${m.d*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>`;
+    if(m.type==="lavabo") g+=`<rect x="${X(px+m.w/2-22)}" y="${Y(W-m.d+10)}" width="${44*S}" height="${34*S}" rx="7" fill="#fff" stroke="#999"/>`;
+    else g+=`<text x="${X(px+m.w/2)}" y="${Y(W-m.d/2)+4}" text-anchor="middle" font-size="10">${m.label}</text>`;
+    g+=dimH(X(px),X(px+m.w),Y(W)+18,f1(m.w),true,"#8a5a34",11); ex+=m.w; });
+  (wL.upper||[]).forEach(u=>{ const px=L-u.x-u.w; g+=`<rect x="${X(px)+3}" y="${Y(W-u.d)+3}" width="${u.w*S-6}" height="${u.d*S-6}" fill="none" stroke="#555" stroke-dasharray="5 4"/>
+    <line x1="${X(px)+3}" y1="${Y(W-u.d)+3}" x2="${X(px)+3}" y2="${Y(W)-3}" stroke="${EST}" stroke-width="3"/>`; });
+  (wL.pipes||[]).forEach((p,k)=>{ g+=`<circle cx="${X(L-p)}" cy="${Y(W)-5}" r="${k===1?5:3.5}" fill="${k===1?"#555":"#3a78c2"}"/>`; });
+  // cotas
+  g+=dimH(X(0),X(L),Y(0)-46,`Muro A: ${wA.length}`,false);
+  g+=dimH(X(0),X(L),Y(W)+50,`Muro lavabos: ${wL.length}`,true);
+  const xs=X(L)+40;
+  g+=dimV(xs,Y(0),Y(d0),"≈"+d0,false,EST,10)+dimV(xs,Y(d0),Y(d1),"≈"+r.side.door,false,EST,10)+dimV(xs,Y(d1),Y(W),"≈"+f1(W-d1),false,EST,10);
+  g+=dimV(X(0)-46,Y(0),Y(W),"≈"+W,true,EST);
+  const lbl=(x,y,t)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="12" font-weight="600">${t}</text>`;
+  g+=lbl(X(L/2),Y(60)+18,"Muro A")+lbl(X(L/2),Y(W-55)-10,"Muro lavabos");
+  return g+"</svg>";
+}
+
+/* -------- Planta recámara 3 -------- */
+function roomPlan3(){
+  const r=data.plan3, S=1.75, PL=110, PT=100, EST="#c26a00";
+  const L=r.A, Rz=r.recess, Wl=r.bath.wall1+r.bath.door+r.bath.wall2+Rz; // ancho en zona de lavabo
+  const X=c=>PL+c*S, Y=c=>PT+c*S;
+  const eDoor = Wl - r.entry.wall1 - r.entry.wall2;
+  let g=`<svg viewBox="0 0 ${L*S+PL+130} ${Wl*S+PT+120}" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="${[[0,Rz],[r.zap,Rz],[r.zap,0],[L,0],[L,Wl],[0,Wl]].map(p=>X(p[0])+","+Y(p[1])).join(" ")}" fill="#f7f6f3"/>`;
+  const wall=(a,b,c,d)=>`<line x1="${X(a)}" y1="${Y(b)}" x2="${X(c)}" y2="${Y(d)}" stroke="#1d1d1b" stroke-width="6" stroke-linecap="square"/>`;
+  const b0=Rz+r.bath.wall1, b1=b0+r.bath.door, e0=r.entry.wall1, e1=e0+eDoor;
+  g+=wall(0,Rz,r.zap,Rz)+wall(r.zap,Rz,r.zap,0)+wall(r.zap,0,L,0)+wall(0,Wl,L,Wl)+wall(0,Rz,0,b0)+wall(0,b1,0,Wl)+wall(L,0,L,e0)+wall(L,e1,L,Wl);
+  g+=`<line x1="${X(0)}" y1="${Y(b0)}" x2="${X(-r.bath.door)}" y2="${Y(b0)}" stroke="${EST}" stroke-width="2"/>
+  <path d="M ${X(-r.bath.door)} ${Y(b0)} A ${r.bath.door*S} ${r.bath.door*S} 0 0 0 ${X(0)} ${Y(b1)}" fill="none" stroke="${EST}" stroke-dasharray="4 3"/>
+  <text transform="translate(${X(0)-14},${Y((b0+b1)/2)}) rotate(-90)" text-anchor="middle" font-size="11" fill="${EST}">Baño</text>
+  <line x1="${X(L)}" y1="${Y(e0)}" x2="${X(L+eDoor*0.5)}" y2="${Y(e0)}" stroke="${EST}" stroke-width="2"/>
+  <text transform="translate(${X(L)+14},${Y((e0+e1)/2)}) rotate(90)" text-anchor="middle" font-size="11" fill="${EST}">Entrada</text>`;
+  // Muro A abajo
+  const wA=data.walls.find(w=>w.id==="A"), gA=gapOf(wA); let x=gA/2;
+  mods(wA).forEach(m=>{
+    g+=`<rect x="${X(x)}" y="${Y(Wl-m.d)}" width="${m.w*S}" height="${m.d*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <text x="${X(x+m.w/2)}" y="${Y(Wl-m.d/2)+4}" text-anchor="middle" font-size="9">${m.label.replace("Doble tubular","D. tub.").replace("Cajonero","Cajonero")}</text>`;
+    if(m.type==="tubular") g+=`<line x1="${X(x)+3}" y1="${Y(Wl-m.d/2)+12}" x2="${X(x+m.w)-3}" y2="${Y(Wl-m.d/2)+12}" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>`;
+    g+=dimH(X(x),X(x+m.w),Y(Wl)+18,f1(m.w),true,"#8a5a34",10); x+=m.w; });
+  // Zapateras
+  const wZ=data.walls.find(w=>w.id==="Z"), gZ=gapOf(wZ); x=gZ;
+  mods(wZ).forEach(m=>{
+    g+=`<rect x="${X(x)}" y="${Y(Rz)}" width="${m.w*S}" height="${m.d*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <text x="${X(x+m.w/2)}" y="${Y(Rz+m.d/2)+4}" text-anchor="middle" font-size="10">${m.label}</text>`;
+    g+=dimH(X(x),X(x+m.w),Y(Rz)-14,f1(m.w),false,"#8a5a34",10); x+=m.w; });
+  g+=dimH(X(0),X(gZ),Y(Rz)-14,f1(gZ),false,"#2e7d4f",9);
+  // Lavabos
+  const wL=data.walls.find(w=>w.id==="L"); x=r.zap;
+  mods(wL).forEach(m=>{
+    g+=`<rect x="${X(x)}" y="${Y(0)}" width="${m.w*S}" height="${m.d*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>`;
+    if(m.type==="lavabo") g+=`<rect x="${X(x+m.w/2-22)}" y="${Y(8)}" width="${44*S}" height="${34*S}" rx="7" fill="#fff" stroke="#999"/>`;
+    else g+=`<text x="${X(x+m.w/2)}" y="${Y(m.d/2)+4}" text-anchor="middle" font-size="10">${m.label}</text>`;
+    g+=dimH(X(x),X(x+m.w),Y(0)-14,f1(m.w),false,"#8a5a34",10); x+=m.w; });
+  (wL.upper||[]).forEach(u=>{ const px=r.zap+u.x; g+=`<rect x="${X(px)+3}" y="${Y(0)+3}" width="${u.w*S-6}" height="${u.d*S-6}" fill="none" stroke="#555" stroke-dasharray="5 4"/>
+    <line x1="${X(px)+3}" y1="${Y(0)+3}" x2="${X(px)+3}" y2="${Y(u.d)-3}" stroke="${EST}" stroke-width="3"/>`; });
+  (wL.pipes||[]).forEach((p,k)=>{ g+=`<circle cx="${X(r.zap+p)}" cy="${Y(0)+5}" r="${k===1?5:3.5}" fill="${k===1?"#555":"#3a78c2"}"/>`; });
+  // cotas generales
+  g+=dimH(X(0),X(L),Y(Wl)+50,`Muro A: ${L}`,true);
+  g+=dimH(X(r.zap),X(L),Y(0)-40,`Muro lavabos: ${f1(L-r.zap)}`,false);
+  g+=dimH(X(0),X(r.zap),Y(Rz)-40,`${r.zap}`,false);
+  g+=dimV(X(r.zap)-14,Y(0),Y(Rz),Rz,true,"#444",10);
+  g+=dimV(X(0)-40,Y(Rz),Y(b0),r.bath.wall1,true,"#444",10)+dimV(X(0)-40,Y(b0),Y(b1),"≈"+r.bath.door,true,EST,10)+dimV(X(0)-40,Y(b1),Y(Wl),r.bath.wall2,true,"#444",10);
+  g+=dimV(X(L)+40,Y(0),Y(e0),r.entry.wall1,false,"#444",10)+dimV(X(L)+40,Y(e0),Y(e1),"≈"+f1(eDoor),false,EST,10)+dimV(X(L)+40,Y(e1),Y(Wl),"≈"+r.entry.wall2,false,EST,10);
+  const lbl=(x,y,t)=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="12" font-weight="600">${t}</text>`;
+  g+=lbl(X(L/2),Y(Wl-60)-10,"Muro A")+lbl(X(r.zap+120),Y(55)+18,"Muro lavabos");
+  return g+"</svg>";
+}
+
+/* -------- Elevación -------- */
+function elevation(w){
+  const S=w.low?3:2.3, run=runLen(w), L=Math.max(run, w.length||0), gap=Math.max(0,gapOf(w));
+  const PL=70, PR=70, PT=w.low?50:((w.upper||w.upperRow)?75:40), PB=140, W=L*S, H=w.height*S;
+  const X=c=>PL+c*S, Y=c=>PT+H-c*S;
+  const off = w.gapSide==="izq" ? gap : w.gapSide==="ambos" ? gap/2 : 0;
+  let g=`<svg viewBox="0 0 ${W+PL+PR} ${H+PT+PB}" xmlns="http://www.w3.org/2000/svg"><defs>${HATCH("hatch"+w.id)}</defs>
+  <rect x="${PL}" y="${PT}" width="${W}" height="${H}" fill="#fafaf8" stroke="#999" stroke-dasharray="4 3"/>
+  <line x1="${PL-20}" y1="${Y(0)}" x2="${PL+W+20}" y2="${Y(0)}" stroke="#1d1d1b" stroke-width="3"/>`;
+  const ledH=(x1,x2,y)=>`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${LED}" stroke-width="3"/>`;
+  const ledV=(x,y1,y2)=>`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${LED}" stroke-width="3"/>`;
+  const LOW=new Set(["fijo","cajonbajo","cesto","lavabo","oculto","flotado","vanity1"]);
+  const ct = w.counter ? w.counter.t : 0;
+  layout(w).map(m=>({...m,x:m.x+off})).forEach(m=>{
+    const z=10;
+    if(LOW.has(m.type)){
+      const top = m.h - (m.type==="oculto"?0:ct);   // donde termina el mueble bajo la cubierta
+      if(m.type==="oculto"){
+        g+=`<rect x="${X(m.x)}" y="${Y(m.h)}" width="${m.w*S}" height="${m.h*S}" fill="url(#hatch${w.id})" stroke="#9a8d7b" stroke-dasharray="4 3"/>`;
+        const words=(m.note||"").split(" "); const mid=Math.ceil(words.length/2);
+        g+=`<text x="${X(m.x+m.w/2)}" y="${Y(m.h/2)-4}" text-anchor="middle" font-size="10" fill="#5d5346">${words.slice(0,mid).join(" ")}</text>
+        <text x="${X(m.x+m.w/2)}" y="${Y(m.h/2)+10}" text-anchor="middle" font-size="10" fill="#5d5346">${words.slice(mid).join(" ")}</text>`;
+      } else if(m.type==="fijo"){
+        g+=`<rect x="${X(m.x)}" y="${Y(top)}" width="${m.w*S}" height="${top*S}" fill="${WOOD_S}"/>`;
+      } else if(m.type==="vanity1"){
+        const dh=(m.dh||12)+3;
+        g+=`<rect x="${X(m.x)}" y="${Y(top)}" width="${m.w*S}" height="${dh*S}" fill="${WOOD}" stroke="${WOOD_S}" stroke-width="1.5"/>
+        <line x1="${X(m.x+m.w/2)-20}" y1="${Y(top)+8}" x2="${X(m.x+m.w/2)+20}" y2="${Y(top)+8}" stroke="${WOOD_S}" stroke-width="2"/>
+        <line x1="${X(m.x)}" y1="${Y(top-dh)}" x2="${X(m.x)}" y2="${Y(0)}" stroke="#bbb" stroke-dasharray="3 3"/>
+        <text x="${X(m.x)+8}" y="${Y(top)+18}" font-size="10" fill="#5d5346">Cajón delgado</text>
+        <text x="${X(m.x+m.w/2)}" y="${Y((top-dh)/2)+4}" text-anchor="middle" font-size="10" fill="#8a7a64">Libre abajo</text>`;
+        g+=dimV(X(m.x+m.w)-14,Y(top-dh),Y(top),"≈"+dh,true,"#8a7a64",10);
+      } else if(m.type==="flotado"){
+        const fb=30; // flotado: libre abajo
+        g+=`<rect x="${X(m.x)}" y="${Y(top)}" width="${m.w*S}" height="${(top-fb)*S}" fill="${WOOD}" stroke="${WOOD_S}" stroke-width="1.5"/>
+        <line x1="${X(m.x+m.w/2)-20}" y1="${Y(top)+10}" x2="${X(m.x+m.w/2)+20}" y2="${Y(top)+10}" stroke="${WOOD_S}" stroke-width="2"/>
+        <text x="${X(m.x+m.w/2)}" y="${Y(fb/2)+4}" text-anchor="middle" font-size="10" fill="#8a7a64">Flotado</text>`;
+        g+=dimV(X(m.x+m.w)-14,Y(0),Y(fb),"≈"+fb,true,"#8a7a64",10);
+      } else {
+        g+=`<rect x="${X(m.x)}" y="${Y(top)}" width="${m.w*S}" height="${top*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+        <rect x="${X(m.x)}" y="${Y(z)}" width="${m.w*S}" height="${z*S}" fill="${WOOD}" stroke="${WOOD_S}"/>`;
+        const fh=top-z;
+        if(m.type==="cajonbajo"){ for(let k=0;k<3;k++){ const y0=z+k*fh/3;
+          g+=`<rect x="${X(m.x)+2}" y="${Y(y0+fh/3)+1}" width="${m.w*S-4}" height="${fh/3*S-2}" fill="${WOOD}" stroke="${WOOD_S}"/>
+          <line x1="${X(m.x+m.w/2)-10}" y1="${Y(y0+fh/3)+6}" x2="${X(m.x+m.w/2)+10}" y2="${Y(y0+fh/3)+6}" stroke="${WOOD_S}" stroke-width="2"/>`; } }
+        if(m.type==="cesto"){
+          g+=`<rect x="${X(m.x)+2}" y="${Y(top)+1}" width="${m.w*S-4}" height="${fh*S-2}" fill="${WOOD}" stroke="${WOOD_S}"/>
+          <line x1="${X(m.x+m.w/2)-10}" y1="${Y(top)+6}" x2="${X(m.x+m.w/2)+10}" y2="${Y(top)+6}" stroke="${WOOD_S}" stroke-width="2"/>
+          <text x="${X(m.x+m.w/2)}" y="${Y(z+fh/2)-6}" text-anchor="middle" font-size="10" fill="#5d5346">Cesto</text>
+          <text x="${X(m.x+m.w/2)}" y="${Y(z+fh/2)+8}" text-anchor="middle" font-size="10" fill="#5d5346">abatible</text>`; }
+        if(m.type==="lavabo"){
+          g+=`<rect x="${X(m.x)+2}" y="${Y(top)+1}" width="${m.w*S/2-3}" height="${fh*S-2}" fill="${WOOD}" stroke="${WOOD_S}"/>
+          <rect x="${X(m.x+m.w/2)+1}" y="${Y(top)+1}" width="${m.w*S/2-3}" height="${fh*S-2}" fill="${WOOD}" stroke="${WOOD_S}"/>
+          <line x1="${X(m.x+m.w/2)-6}" y1="${Y(top)+8}" x2="${X(m.x+m.w/2)-6}" y2="${Y(top)+30}" stroke="${WOOD_S}" stroke-width="2"/>
+          <line x1="${X(m.x+m.w/2)+6}" y1="${Y(top)+8}" x2="${X(m.x+m.w/2)+6}" y2="${Y(top)+30}" stroke="${WOOD_S}" stroke-width="2"/>`; }
+      }
+      if(m.type!=="fijo") g+=`<text x="${X(m.x+m.w/2)}" y="${Y(0)+58}" text-anchor="middle" font-size="${m.w<40?10:12}" font-weight="600">${m.type==="cesto"?"Cesto":m.label}</text>`;
+      g+=dimH(X(m.x),X(m.x+m.w),Y(0)+26,f1(m.w));
+      return;
+    }
+    if(m.type==="esquinero"){
+      const vis=m.vis??30, hid=m.w-vis, side=m.side||"der";
+      const xv = side==="der"? m.x : m.x+hid;
+      const xh = side==="der"? m.x+vis : m.x;
+      const ry = m.h-12, adj=(w.adj||{})[side]||"muro lateral";
+      g+=`<rect x="${X(xv)}" y="${Y(m.h)}" width="${vis*S}" height="${m.h*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+      <rect x="${X(xv)}" y="${Y(z)}" width="${vis*S}" height="${z*S}" fill="${WOOD}" stroke="${WOOD_S}"/>
+      <rect x="${X(xh)}" y="${Y(m.h)}" width="${hid*S}" height="${m.h*S}" fill="url(#hatch${w.id})" stroke="#9a8d7b" stroke-dasharray="4 3"/>
+      ${ledH(X(xv)+2,X(xv+vis)-2,Y(m.h)+4)}
+      <line x1="${X(xv)+(side==="der"?4:0)}" y1="${Y(ry)}" x2="${X(xv+vis)-(side==="der"?0:4)}" y2="${Y(ry)}" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+      <line x1="${X(xh)+(side==="der"?0:4)}" y1="${Y(ry)}" x2="${X(xh+hid)-(side==="der"?4:0)}" y2="${Y(ry)}" stroke="#555" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="${X(xv+vis/2)}" y="${Y(ry)+16}" text-anchor="middle" font-size="10" fill="#5d5346">Tubo en L</text>
+      <text x="${X(xh+hid/2)}" y="${Y(m.h/2)-8}" text-anchor="middle" font-size="11" fill="#5d5346">Esquina con</text>
+      <text x="${X(xh+hid/2)}" y="${Y(m.h/2)+6}" text-anchor="middle" font-size="11" fill="#5d5346">${adj}</text>
+      <text x="${X(xh+hid/2)}" y="${Y(m.h/2)+20}" text-anchor="middle" font-size="11" ${MONO} fill="#5d5346">(${hid})</text>
+      <text x="${X(m.x+m.w/2)}" y="${Y(m.h)-8}" text-anchor="middle" font-size="12" font-weight="600">${m.label}</text>`;
+      g+=dimH(X(xv),X(xv+vis),Y(0)+26,vis);
+      g+=dimH(X(xh),X(xh+hid),Y(0)+26,hid,true,"#8a7a64");
+      g+=dimH(X(m.x),X(m.x+m.w),Y(0)+54,`${m.w}×${m.w}`,true,"#8a5a34");
+      return;
+    }
+    if(m.type!=="tocador") g+=`<rect x="${X(m.x)}" y="${Y(m.h)}" width="${m.w*S}" height="${m.h*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <rect x="${X(m.x)}" y="${Y(z)}" width="${m.w*S}" height="${z*S}" fill="${WOOD}" stroke="${WOOD_S}"/>`;
+    if(m.type==="tubular"){
+      g+=ledH(X(m.x)+2,X(m.x+m.w)-2,Y(m.h)+4);
+      [m.h-12, m.h/2].forEach(yy=>{ g+=`<line x1="${X(m.x)+4}" y1="${Y(yy)}" x2="${X(m.x+m.w)-4}" y2="${Y(yy)}" stroke="#555" stroke-width="3" stroke-linecap="round"/>`; });
+    }
+    if(m.type==="cajonero"){
+      const dTop=z+100, n=4, dh=(dTop-z)/n;
+      for(let k=0;k<n;k++){ const y0=z+k*dh;
+        g+=`<rect x="${X(m.x)+2}" y="${Y(y0+dh)+1}" width="${m.w*S-4}" height="${dh*S-2}" fill="${WOOD}" stroke="${WOOD_S}"/>
+        <line x1="${X(m.x+m.w/2)-14}" y1="${Y(y0+dh)+7}" x2="${X(m.x+m.w/2)+14}" y2="${Y(y0+dh)+7}" stroke="${WOOD_S}" stroke-width="2"/>`; }
+      [dTop+(m.h-dTop)/3, dTop+2*(m.h-dTop)/3, dTop].forEach(yy=>{ g+=`<line x1="${X(m.x)+2}" y1="${Y(yy)}" x2="${X(m.x+m.w)-2}" y2="${Y(yy)}" stroke="${WOOD_S}" stroke-width="2"/>`; });
+      g+=ledV(X(m.x)+3,Y(m.h)+3,Y(dTop)-2)+ledV(X(m.x+m.w)-3,Y(m.h)+3,Y(dTop)-2);
+    }
+    if(m.type==="zapatero"){
+      const nE=5, eTop=z+105, eh=(eTop-z)/nE;
+      for(let k=0;k<nE;k++){ const y0=z+k*eh+3;
+        // repisa extraíble: charola con frente bajo
+        g+=`<line x1="${X(m.x)+3}" y1="${Y(y0)}" x2="${X(m.x+m.w)-3}" y2="${Y(y0)}" stroke="${WOOD_S}" stroke-width="2"/>
+        <rect x="${X(m.x)+3}" y="${Y(y0+6)}" width="${m.w*S-6}" height="${6*S}" fill="${WOOD}" stroke="${WOOD_S}"/>
+        ${[0.2,0.4,0.6,0.8].map(f=>`<ellipse cx="${X(m.x+m.w*f)}" cy="${Y(y0+9)}" rx="${5*S/2.3}" ry="3" fill="#cfc7bb"/>`).join("")}`; }
+      const shelves=[eTop, eTop+(m.h-eTop)/3, eTop+2*(m.h-eTop)/3];
+      shelves.forEach(yy=>{ g+=`<line x1="${X(m.x)+2}" y1="${Y(yy)}" x2="${X(m.x+m.w)-2}" y2="${Y(yy)}" stroke="${WOOD_S}" stroke-width="2.5"/>
+        ${[0.25,0.5,0.75].map(f=>`<ellipse cx="${X(m.x+m.w*f)}" cy="${Y(yy)-5}" rx="${5*S/2.3}" ry="3" fill="#cfc7bb"/>`).join("")}`; });
+      g+=ledV(X(m.x)+3,Y(m.h)+3,Y(z)-2)+ledV(X(m.x+m.w)-3,Y(m.h)+3,Y(z)-2);
+
+    }
+    if(m.type==="zaptub"){
+      g+=ledH(X(m.x)+2,X(m.x+m.w)-2,Y(m.h)+4);
+      g+=`<line x1="${X(m.x)+4}" y1="${Y(m.h-12)}" x2="${X(m.x+m.w)-4}" y2="${Y(m.h-12)}" stroke="#555" stroke-width="3" stroke-linecap="round"/>`;
+      const sTop=z+100;
+      g+=`<line x1="${X(m.x)+2}" y1="${Y(sTop)}" x2="${X(m.x+m.w)-2}" y2="${Y(sTop)}" stroke="${WOOD_S}" stroke-width="2.5"/>`;
+      for(let k=0;k<5;k++){ const yy=z+k*(sTop-z)/5+2;
+        g+=`<line x1="${X(m.x)+2}" y1="${Y(yy)}" x2="${X(m.x+m.w)-2}" y2="${Y(yy)}" stroke="${WOOD_S}" stroke-width="2"/>
+        ${[0.2,0.4,0.6,0.8].map(f=>`<ellipse cx="${X(m.x+m.w*f)}" cy="${Y(yy)-5}" rx="5" ry="3" fill="#cfc7bb"/>`).join("")}`; }
+      g+=`<text x="${X(m.x+m.w/2)}" y="${Y(sTop+40)}" text-anchor="middle" font-size="10" fill="#5d5346">Colgar</text>
+      <text x="${X(m.x+m.w/2)}" y="${Y(sTop)+14}" text-anchor="middle" font-size="10" fill="#5d5346">Zapatos</text>`;
+    }
+    if(m.type==="zapfijo"){
+      for(let k=1;k<=7;k++){ const yy=z+(m.h-z)*k/8;
+        g+=`<line x1="${X(m.x)+2}" y1="${Y(yy)}" x2="${X(m.x+m.w)-2}" y2="${Y(yy)}" stroke="${WOOD_S}" stroke-width="2.5"/>`; }
+      for(let k=0;k<7;k++){ const yy=z+(m.h-z)*k/8+3;
+        g+=[0.2,0.4,0.6,0.8].map(f=>`<ellipse cx="${X(m.x+m.w*f)}" cy="${Y(yy)-4}" rx="5" ry="3" fill="#cfc7bb"/>`).join(""); }
+    }
+    if(m.type==="entrepanero"){
+      for(let k=1;k<=5;k++){ const yy=z+(m.h-z)*k/6; g+=`<line x1="${X(m.x)+2}" y1="${Y(yy)}" x2="${X(m.x+m.w)-2}" y2="${Y(yy)}" stroke="${WOOD_S}" stroke-width="2.5"/>`; }
+    }
+    if(m.type==="tocador"){
+      g+=`<rect x="${X(m.x)}" y="${Y(m.h)}" width="${m.w*S}" height="${m.h*S}" fill="url(#hatch${w.id})" stroke="#9a8d7b" stroke-dasharray="4 3"/>
+      <rect x="${X(m.x)}" y="${Y(79)}" width="${m.w*S}" height="${3*S}" fill="${WOOD_S}"/>
+      <rect x="${X(m.x)+2}" y="${Y(76)}" width="${m.w*S-4}" height="${18*S}" fill="${WOOD}" stroke="${WOOD_S}"/>
+      <line x1="${X(m.x+m.w/2)-14}" y1="${Y(76)+8}" x2="${X(m.x+m.w/2)+14}" y2="${Y(76)+8}" stroke="${WOOD_S}" stroke-width="2"/>
+      <text x="${X(m.x+m.w/2)}" y="${Y(150)}" text-anchor="middle" font-size="11" fill="#5d5346">Muro forrado</text>
+      <text x="${X(m.x+m.w/2)}" y="${Y(150)+14}" text-anchor="middle" font-size="10" fill="#8a7a64">(sin módulo)</text>
+      <text x="${X(m.x+m.w/2)}" y="${Y(40)}" text-anchor="middle" font-size="10" fill="#8a7a64">Cajón flotado</text>`;
+      g+=dimV(X(m.x+m.w)+14,Y(0),Y(79),79,false,"#8a7a64",10);
+    }
+    g+=`<text x="${X(m.x+m.w/2)}" y="${Y(m.h)-8}" text-anchor="middle" font-size="${m.w<50||m.label.length>14?10:12}" font-weight="600">${m.label}</text>`;
+    g+=dimH(X(m.x),X(m.x+m.w),Y(0)+26,f1(m.w));
+  });
+  if(w.upperRow){ const u=w.upperRow, ug=w.gap||0, uw=(w.length-ug)/u.n;
+    for(let k=0;k<u.n;k++){ const ux=ug/2+k*uw;
+      g+=`<rect x="${X(ux)}" y="${Y(u.y0+u.h)}" width="${uw*S}" height="${u.h*S}" fill="${INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+      ${ledH(X(ux)+2,X(ux+uw)-2,Y(u.y0+u.h)+4)}
+      <line x1="${X(ux)+6}" y1="${Y(u.y0+u.h-14)}" x2="${X(ux+uw)-6}" y2="${Y(u.y0+u.h-14)}" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+      <line x1="${X(ux)+6}" y1="${Y(u.y0+u.h-14)}" x2="${X(ux)+6}" y2="${Y(u.y0+u.h-4)}" stroke="#555" stroke-width="2"/>
+      <line x1="${X(ux+uw)-6}" y1="${Y(u.y0+u.h-14)}" x2="${X(ux+uw)-6}" y2="${Y(u.y0+u.h-4)}" stroke="#555" stroke-width="2"/>
+      <path d="M ${X(ux+uw/2)} ${Y(u.y0+u.h-30)} l 0 ${40} m -6 -8 l 6 8 l 6 -8" fill="none" stroke="#8a7a64" stroke-width="1.5"/>
+      <text x="${X(ux+uw/2)}" y="${Y(u.y0+u.h/2)+30}" text-anchor="middle" font-size="11" fill="#5d5346">${u.label}</text>`;
+      g+=dimH(X(ux),X(ux+uw),Y(u.y0+u.h)-14,f1(uw),false,"#444",12);
+    }
+    g+=dimV(X(w.length)+18,Y(0),Y(u.y0),u.y0,false,"#8a7a64",11)+dimV(X(w.length)+18,Y(u.y0),Y(u.y0+u.h),u.h,false,"#8a7a64",11);
+  }
+  if(w.counter){ const c=w.counter;
+    g+=`<rect x="${X(c.from)}" y="${Y(c.h)}" width="${(c.to-c.from)*S}" height="${c.t*S}" fill="#f2f2f0" stroke="#9a9a96" stroke-width="1.5"/>
+    <text x="${X((c.from+c.to)/2)}" y="${Y(c.h)-6}" text-anchor="middle" font-size="11" fill="#6f6c66">${c.label}</text>`;
+    layout(w).filter(m=>m.type==="lavabo").forEach(m=>{
+      g+=`<rect x="${X(m.x+m.w/2-25)}" y="${Y(c.h-c.t)}" width="${50*S}" height="${14*S}" rx="8" fill="none" stroke="#7d8a8f" stroke-dasharray="4 3"/>
+      <text x="${X(m.x+m.w/2)}" y="${Y(c.h-c.t-14)-4}" text-anchor="middle" font-size="9" fill="#5f6f75">tarja bajo cubierta</text>`; });
+  }
+  (w.upper||[]).forEach(u=>{
+    g+=`<rect x="${X(u.x)}" y="${Y(u.y0+u.h)}" width="${u.w*S}" height="${u.h*S}" fill="${u.sideways?WOOD:INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>`;
+    for(let k=1;k<=3;k++){ const yy=u.y0+u.h*k/4; g+=`<line x1="${X(u.x)+2}" y1="${Y(yy)}" x2="${X(u.x+u.w)-2}" y2="${Y(yy)}" stroke="${WOOD_S}" stroke-width="${u.sideways?1:2.5}" ${u.sideways?'stroke-dasharray="4 3"':""}/>`; }
+    if(u.sideways) g+=`<text transform="translate(${X(u.x+u.w/2)+4},${Y(u.y0+u.h/2)}) rotate(-90)" text-anchor="middle" font-size="10" fill="#4a3522">Costado · abre hacia el lavabo</text>`;
+    g+=`<text x="${X(u.x+u.w/2)}" y="${Y(u.y0+u.h)-8}" text-anchor="middle" font-size="11" font-weight="600">${u.label}</text>`;
+    g+=dimH(X(u.x),X(u.x+u.w),Y(u.y0+u.h)-26,u.w,false);
+    g+=dimV(X(u.x+u.w)+14,Y(u.y0),Y(u.y0+u.h),u.h,false,"#8a7a64",10);
+  });
+  if(w.pipes){ const py=48;
+    w.pipes.forEach((px,k)=>{ g+=`<circle cx="${X(px)}" cy="${Y(py)}" r="${k%3===1?6:4.5}" fill="${k%3===1?"#555":"#3a78c2"}" stroke="#fff" stroke-width="1.5"/>`; });
+    g+=dimH(X(0),X(w.pipes[0]),Y(py)-14,w.pipes[0],false,"#3a5f8a",11);
+    g+=dimH(X(w.pipes[w.pipes.length-1]),X(w.length),Y(py)-14,f1(w.length-w.pipes[w.pipes.length-1]),false,"#3a5f8a",11);
+  }
+  if(gap>0){
+    if(w.gapSide==="ambos"){ g+=dimH(X(0),X(off),Y(0)+26,f1(gap/2),true,"#2e7d4f",10)+dimH(X(off+run),X(L),Y(0)+26,f1(gap/2),true,"#2e7d4f",10); }
+    else { const a=off?0:run, b=off?off:L; g+=dimH(X(a),X(b),Y(0)+26,f1(gap),true,"#2e7d4f"); } }
+  g+=dimH(X(off),X(off+run),Y(0)+86,`Recorrido total de muebles: ${f1(run)}`);
+  if(w.length) g+=dimH(X(0),X(w.length),Y(0)+114,`Largo del muro: ${w.length}`);
+  g+=dimV(PL-28,Y(0),Y(w.height),w.height,true);
+  g+=dimV(PL-8,Y(0),Y(10),10,true,"#8a7a64",10);
+  return g+"</svg>";
+}
+
+/* -------- Planta del muro (detalle) -------- */
+function wallPlan(w){
+  const S=1.6, run=runLen(w), dep=60, ret=150, gap=Math.max(0,gapOf(w));
+  const L=run+gap, off = w.gapSide==="izq"?gap: w.gapSide==="ambos"?gap/2:0;
+  const PL=110, PT=50, W=L*S;
+  const X=c=>PL+c*S, Y=c=>PT+c*S;
+  const hasEsq=w.modules.some(m=>m.type==="esquinero");
+  let g=`<svg viewBox="0 0 ${W+PL+110} ${hasEsq?(ret+40)*S+PT+40:(70)*S+PT+30}" xmlns="http://www.w3.org/2000/svg"><defs>${HATCH("hpw"+w.id)}</defs>
+  <line x1="${X(0)-3}" y1="${Y(0)}" x2="${X(L)+3}" y2="${Y(0)}" stroke="#1d1d1b" stroke-width="5"/>`;
+  const ends={};
+  layout(w).map(m=>({...m,x:m.x+off})).forEach(m=>{
+    if(m.type==="esquinero"){
+      const right=(m.side||"der")==="der", s=m.w;
+      if(right) g+=cornerL(X,Y,m.x+s,0,-1,0,0,1,s,dep); else g+=cornerL(X,Y,m.x,0,1,0,0,1,s,dep);
+      g+=`<text x="${X(m.x+s/2)}" y="${Y(dep/2)-8}" text-anchor="middle" font-size="11" font-weight="600">${m.label}</text>`;
+      g+=dimH(X(m.x),X(m.x+s),Y(0)-26,s,false,"#8a5a34");
+      const xs = right? m.x+s-dep : m.x;
+      g+=`<rect x="${X(xs)}" y="${Y(s)}" width="${dep*S}" height="${(ret-s+30)*S}" fill="url(#hpw${w.id})" stroke="#9a8d7b" stroke-dasharray="4 3"/>
+      <text x="${X(xs+dep/2)}" y="${Y(s+40)}" text-anchor="middle" font-size="10" fill="#5d5346">Muebles</text>
+      <text x="${X(xs+dep/2)}" y="${Y(s+40)+13}" text-anchor="middle" font-size="10" fill="#5d5346">${(w.adj||{})[right?"der":"izq"]||""}</text>`;
+      ends[right?"der":"izq"]=true;
+      return;
+    }
+    const dd=m.d||dep;
+    if(m.type==="oculto"){ g+=`<rect x="${X(m.x)}" y="${Y(0)}" width="${m.w*S}" height="${dd*S}" fill="url(#hpw${w.id})" stroke="#9a8d7b" stroke-dasharray="4 3"/><text x="${X(m.x+m.w/2)}" y="${Y(dd/2)+4}" text-anchor="middle" font-size="9" fill="#5d5346">${m.label}</text>`; g+=dimH(X(m.x),X(m.x+m.w),Y(0)-26,f1(m.w),false); return; }
+    if(m.type==="lavabo") g+=`<rect x="${X(m.x+m.w/2-25)}" y="${Y(12)}" width="${50*S}" height="${36*S}" rx="8" fill="#fff" stroke="#999"/>`;
+    g+=`<rect x="${X(m.x)}" y="${Y(0)}" width="${m.w*S}" height="${dd*S}" fill="${m.type==="lavabo"?"rgba(239,228,212,.5)":INNER}" stroke="${WOOD_S}" stroke-width="1.5"/>
+    <text x="${X(m.x+m.w/2)+(m.type==="vanity1"?20:0)}" y="${Y(dd/2)+4}" text-anchor="middle" font-size="${m.w<50?9:11}">${m.type==="fijo"?"":m.type==="cesto"?"Cesto":m.label.replace("Doble tubular","D. tubular")}</text>`;
+    if(m.type==="tubular") g+=`<line x1="${X(m.x)+3}" y1="${Y(dep/2)-12}" x2="${X(m.x+m.w)-3}" y2="${Y(dep/2)-12}" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>`;
+    if(m.type==="zaptub") g+=`<line x1="${X(m.x)+3}" y1="${Y(dep/2)-12}" x2="${X(m.x+m.w)-3}" y2="${Y(dep/2)-12}" stroke="#555" stroke-width="2.5" stroke-linecap="round"/>`;
+    g+=dimH(X(m.x),X(m.x+m.w),Y(0)-26,f1(m.w),false);
+  });
+  if(gap>0){ if(w.gapSide==="ambos"){ g+=dimH(X(0),X(off),Y(0)-26,f1(gap/2),false,"#2e7d4f",10)+dimH(X(off+run),X(L),Y(0)-26,f1(gap/2),false,"#2e7d4f",10); } else { const a=off?0:run; g+=dimH(X(a),X(a+gap),Y(0)-26,f1(gap),false,"#2e7d4f"); } }
+  (w.upper||[]).forEach(u=>{ g+=`<rect x="${X(u.x)+3}" y="${Y(0)+3}" width="${u.w*S-6}" height="${u.d*S-6}" fill="none" stroke="#555" stroke-dasharray="5 4"/>
+    ${u.sideways?(()=>{ const right=u.x<w.length/2, ex=right?X(u.x+u.w)-3:X(u.x)+3; return `<line x1="${ex}" y1="${Y(0)+3}" x2="${ex}" y2="${Y(u.d)-3}" stroke="#c26a00" stroke-width="3"/><text x="${ex+(right?4:-4)}" y="${Y(u.d)+12}" text-anchor="${right?"start":"end"}" font-size="9" fill="#c26a00">${right?"abre →":"← abre"}</text>`; })():""}
+    <text x="${X(u.x+u.w/2)}" y="${Y(u.d/2)-2}" text-anchor="middle" font-size="9" fill="#555">Entrep.</text><text x="${X(u.x+u.w/2)}" y="${Y(u.d/2)+10}" text-anchor="middle" font-size="9" fill="#555">(arriba)</text>`; });
+  ["izq","der"].forEach(sd=>{ if(!ends[sd] && !(w.adj||{})[sd]) return; const xw = sd==="der"? X(L)+3 : X(0)-3;
+    g+=`<line x1="${xw}" y1="${Y(0)}" x2="${xw}" y2="${Y(ret+30)}" stroke="#1d1d1b" stroke-width="5"/>
+    <text x="${sd==="der"?xw+10:xw-10}" y="${Y(ret+20)}" text-anchor="${sd==="der"?"start":"end"}" font-size="11" fill="#6f6c66">${w.adj[sd]}</text>`; });
+  const md=Math.max(...w.modules.map(m=>m.d||dep));
+  g+=dimV(X(0)-(ends.izq?70:24),Y(0),Y(md),md,true);
+  return g+"</svg>";
+}
+
+const refImg=(src,cap)=> src?`<figure class="ref" style="margin:0"><img src="${src}" alt="${cap}"><figcaption>${cap}</figcaption></figure>`:"";
+
+function renderPlanta(){
+  if(data.id==="huespedes"){ const w=data.walls[0];
+    return `<div class="card">
+      <div class="wallhead"><h2>Planta general</h2><span class="badge warn">Por ahora solo el closet</span></div>
+      <h3>Closet en planta</h3>
+      ${wallPlan(w)}
+      <table><thead><tr><th>Zona</th><th>Medida</th><th>Contenido</th></tr></thead><tbody>
+        <tr><td>Closet abajo</td><td class="num">${w.length}</td><td>${mods(w).map(m=>m.label+" "+f1(m.w)).join(", ")} · holgura 1.5 + 1.5</td></tr>
+        <tr><td>Closet arriba</td><td class="num">${w.length}</td><td>3 percheros elevables de ${f1((w.length-w.gap)/3)} · holgura 1.5 + 1.5</td></tr>
+        <tr><td>Baño / lavabo</td><td class="num">—</td><td>Pendiente de medidas</td></tr>
+      </tbody></table>
+      <h3>Renders de referencia — modelo 3D</h3>
+      ${refImg(data.planH.render,"Vista en planta del modelo 3D")}
+      ${refImg(data.planH.extra,"Zona de lavabo (pendiente)")}
+    </div>`;
+  }
+  if(data.id==="rec3"){ const r=data.plan3;
+    return `<div class="card">
+      <div class="wallhead"><h2>Planta general</h2><span class="badge warn">≈ estimado del render / por confirmar</span></div>
+      <h3>Planta con distribución y medidas</h3>
+      ${roomPlan3()}
+      <table><thead><tr><th>Muro</th><th>Medida</th><th>Contenido</th></tr></thead><tbody>
+        ${data.walls.map(w=>`<tr><td>${w.name.split(" — ")[0]}</td><td class="num">${w.length}</td><td>${mods(w).map(m=>m.label+" "+f1(m.w)).join(", ")}${gapOf(w)>0.01?" · juego "+f1(gapOf(w)):""}</td></tr>`).join("")}
+        <tr><td>Remetimiento</td><td class="num">${r.recess}</td><td>El muro de lavabos está 60 más atrás que el de zapateras</td></tr>
+        <tr><td>Muro del baño</td><td class="num">≈ ${f1(r.bath.wall1+r.bath.door+r.bath.wall2)}</td><td>${r.bath.wall1} + puerta ≈${r.bath.door} + ${r.bath.wall2}</td></tr>
+        <tr><td>Muro de la entrada</td><td class="num">≈ ${f1(r.bath.wall1+r.bath.door+r.bath.wall2+r.recess)}</td><td>${r.entry.wall1} + puerta ≈${f1(r.bath.wall1+r.bath.door+r.bath.wall2+r.recess-r.entry.wall1-r.entry.wall2)} + ≈${r.entry.wall2}</td></tr>
+      </tbody></table>
+      <div class="notes">Ancho del cuarto y puertas tomados a escala del render (calibrado con Muro A 355.4 y zapateras 113.5).</div>
+      <h3>Render de referencia — modelo 3D</h3>
+      ${refImg(r.render,"Vista en planta del modelo 3D del proyecto")}
+    </div>`;
+  }
+  if(data.id==="rec2"){
+    return `<div class="card">
+      <div class="wallhead"><h2>Planta general</h2><span class="badge warn">Sin planta del arquitecto · ancho ≈ 70 + 89 + 70</span></div>
+      <h3>Planta con distribución y medidas</h3>
+      ${roomPlan2()}
+      <table><thead><tr><th>Muro</th><th>Medida</th><th>Contenido</th></tr></thead><tbody>
+        ${data.walls.map(w=>`<tr><td>${w.name.split(" — ")[0]}</td><td class="num">${w.length}</td><td>${mods(w).map(m=>m.label+" "+f1(m.w)).join(", ")}${gapOf(w)>0.01?" · juego "+f1(gapOf(w)):""}</td></tr>`).join("")}
+        <tr><td>Muros laterales</td><td class="num">≈ 229</td><td>≈70 de muro + ≈89 de puerta + ≈70 de muro (entrada de un lado, baño del otro)</td></tr>
+      </tbody></table>
+      <div class="notes">No hay planta del arquitecto para esta recámara; los muros laterales son aproximados. Con ≈70 de muro antes de cada puerta, el closet (60 de fondo) y los lavabos (55 de fondo) no chocan con las puertas.</div>
+    </div>`;
+  }
+  if(data.id==="rec1"){ const r=data.plan1;
+    return `<div class="card">
+      <div class="wallhead"><h2>Planta general</h2><span class="badge warn">≈ estimado del render</span></div>
+      <h3>Planta con distribución y medidas</h3>
+      ${roomPlan1()}
+      <table><thead><tr><th>Muro</th><th>Medida</th><th>Contenido</th></tr></thead><tbody>
+        ${data.walls.map(w=>`<tr><td>${w.name.split(" — ")[0]}</td><td class="num">${w.length}</td><td>${mods(w).map(m=>m.label+" "+f1(m.w)).join(", ")} · holgura ${f1(gapOf(w))}</td></tr>`).join("")}
+      </tbody></table>
+      <h3>Render de referencia — modelo 3D</h3>
+      ${refImg(r.render,"Vista en planta del modelo 3D del proyecto")}
+      ${refImg("img/r1-lavabo.jpg","Modelo 3D · zona de lavabo (en definición)")}
+    </div>`;
+  }
+  const r=data.plan, p=r.plumbing, tot=p.fromC+2*p.group+p.between+p.toEnd;
+  const wB=data.walls.find(w=>w.id==="B");
+  return `<div class="card">
+    <div class="wallhead"><h2>Planta general</h2><span class="badge warn">Medidas con ≈ estimadas del render a escala</span></div>
+    <h3>Planta con distribución y medidas</h3>
+    ${roomPlan()}
+    <div class="legend"><span><i style="background:${INNER};border:1px solid ${WOOD_S}"></i>Mueble</span><span><i style="background:#2e7d4f"></i>Holgura</span><span><i style="background:#3a78c2;border-radius:50%"></i>Tubería</span><span><i style="background:#555;border-radius:50%"></i>Drenaje</span><span><i style="background:#c26a00"></i>≈ Estimado del render</span></div>
+    <table><thead><tr><th>Muro</th><th>Medida</th><th>Contenido</th></tr></thead><tbody>
+      <tr><td>Muro A</td><td class="num">${r.A}</td><td>Tubular 1, Cajonero 1, Cajonero 2, Tubular 2, Esquinero A-B</td></tr>
+      <tr><td>Muro B</td><td class="num">${r.B}</td><td>${mods(wB).map(m=>m.label+" "+f1(m.w)).join(", ")} · holgura ${f1(gapOf(wB))}</td></tr>
+      <tr><td>Muro C</td><td class="num">${r.C}</td><td>${mods(data.walls.find(w=>w.id==="C")).map(m=>m.label+" "+f1(m.w)).join(", ")} · holgura 1.5</td></tr>
+      <tr><td>Muro lavabos</td><td class="num">${r.lav}</td><td>Fijo 1.5, cajonero 40, cesto 35, lavabo 85, cajones 31.5, lavabo 85, cesto 35, vanity 50 · h 80 · fondo 55<br><small>Tubería: ${p.fromC} · ${p.group} · ${p.between} · ${p.group} · ${p.toEnd} = ${tot}</small></td></tr>
+      <tr><td>Tramo junto a lavabos</td><td class="num">${r.seg219}</td><td>Vanity: esquina 55, cajonero 50, cajón largo 114 · h 75</td></tr>
+      <tr><td>Remetimiento junto al Muro C</td><td class="num">≈ ${r.recess}</td><td>Al terminar el Muro C, el muro se va hacia atrás (363 − 318.5)</td></tr>
+      <tr><td>Puerta</td><td class="num">≈ ${r.door.w}</td><td>A ≈ ${r.door.from} cm de la esquina del Muro C · de la puerta al muro de lavabos ≈ ${r.doorToLav}</td></tr>
+      <tr><td>Baño (WC + regadera)</td><td class="num">≈ ${f1(r.bath.wc+r.bath.shower)}</td><td>WC ≈ ${r.bath.wc} · regadera ≈ ${r.bath.shower} · fondo ≈ ${r.bath.depth}, entre el Muro A y el tramo de 219</td></tr>
+      <tr><td>Largo total del cuarto</td><td class="num">≈ ${f1(r.C+r.door.from+r.door.w+r.doorToLav)}</td><td>Muro C + remetimiento con puerta · comprobación: A + baño + 219 = ${f1(r.A+r.bath.wc+r.bath.shower+r.seg219)}</td></tr>
+    </tbody></table>
+    <div class="notes">Medidas marcadas con ≈ se tomaron a escala del render del arquitecto, calibrado con las medidas reales (Muro C 716, Muro B 318.5, muro de lavabos 363); se recomienda verificarlas en obra. Cada salida de lavabo es tubería – drenaje – tubería en ${p.group} cm (drenaje al centro). Los esquineros miden 90 × 90 de respaldo con 60 de fondo; cada uno se cuenta una sola vez aunque aparezca en dos muros.</div>
+    <h3>Render de referencia — modelo 3D</h3>
+    ${refImg(r.render,"Vista en planta del modelo 3D del proyecto")}
+  </div>`;
+}
+
+function calcBox(w){
+  if(w.calc) return `<div class="calc">${w.calc}</div>`;
+  const auto=w.modules.filter(m=>m.auto); if(!auto.length) return "";
+  const fixed=w.modules.filter(m=>!m.auto), util=w.length-(w.gap||0), resto=util-fixed.reduce((a,m)=>a+m.w,0);
+  return `<div class="calc">Muro ${w.length} − holgura ${w.gap||0} = <b>${f1(util)}</b> útiles<br>
+  ${f1(util)} − módulos fijos (${fixed.map(m=>f1(m.w)).join(" + ")}) = <b>${f1(resto)}</b><br>
+  ${auto.length>1?f1(resto)+" ÷ "+auto.length+" = ":"Módulo de en medio = "}<b>${f1(resto/auto.length)} cm ${auto.length>1?"cada uno":""}</b>${resto>120&&auto.length>1?" (más de 120 → se divide en 2)":""}${auto.length===1&&resto<=120?" (menos de 120 → un solo módulo)":""}</div>`;
+}
+
+
+/* ======== VISTA TERMINADA (wireframe / acabado) ======== */
+const SWATCHES = [{"id": "arauco-durango", "name": "Durango", "brand": "Arauco", "group": "Arauco", "hex": "#593a1f"}, {"id": "arauco-encino-polar", "name": "Encino Polar", "brand": "Arauco", "group": "Arauco", "hex": "#e4daca"}, {"id": "arauco-cerezo", "name": "Cerezo", "brand": "Arauco", "group": "Arauco", "hex": "#81441f"}, {"id": "arauco-wengue", "name": "Wengué", "brand": "Arauco", "group": "Arauco", "hex": "#211008"}, {"id": "arauco-cairo", "name": "Cairo", "brand": "Arauco", "group": "Arauco", "hex": "#d4cdbd"}, {"id": "arauco-blanco-frosty", "name": "Blanco Frosty", "brand": "Arauco", "group": "Arauco", "hex": "#e6e5ea"}, {"id": "arauco-negro", "name": "Negro", "brand": "Arauco", "group": "Arauco", "hex": "#07080c"}, {"id": "arauco-oxford", "name": "Oxford", "brand": "Arauco", "group": "Arauco", "hex": "#4a4742"}, {"id": "arauco-vison", "name": "Visón", "brand": "Arauco", "group": "Arauco", "hex": "#97897c"}, {"id": "arauco-blanco-absoluto", "name": "Blanco Absoluto", "brand": "Arauco", "group": "Arauco", "hex": "#f0f1ec"}, {"id": "arauco-gris-claro", "name": "Gris Claro", "brand": "Arauco", "group": "Arauco", "hex": "#dcd9d4"}, {"id": "arauco-gris", "name": "Gris", "brand": "Arauco", "group": "Arauco", "hex": "#939798"}, {"id": "arauco-malta", "name": "Malta", "brand": "Arauco", "group": "Arauco", "hex": "#8f704f"}, {"id": "arauco-turmalina", "name": "Turmalina", "brand": "Arauco", "group": "Arauco", "hex": "#292a2b"}, {"id": "arauco-latte", "name": "Latte", "brand": "Arauco", "group": "Arauco", "hex": "#b69275"}, {"id": "arauco-rioja", "name": "Rioja", "brand": "Arauco", "group": "Arauco", "hex": "#573e2c"}, {"id": "arauco-chardonnay", "name": "Chardonnay", "brand": "Arauco", "group": "Arauco", "hex": "#e8dbcc"}, {"id": "arauco-niquel", "name": "Níquel", "brand": "Arauco", "group": "Arauco", "hex": "#3c332e"}, {"id": "arauco-zafiro", "name": "Zafiro", "brand": "Arauco", "group": "Arauco", "hex": "#1c262f"}, {"id": "arauco-roble-merida", "name": "Roble Mérida", "brand": "Arauco", "group": "Arauco", "hex": "#d8b790"}, {"id": "arauco-anahuac", "name": "Anáhuac", "brand": "Arauco", "group": "Arauco", "hex": "#292629"}, {"id": "arauco-nogal-britanico", "name": "Nogal Británico", "brand": "Arauco", "group": "Arauco", "hex": "#685042"}, {"id": "arauco-ebano-indi", "name": "Ébano Indi", "brand": "Arauco", "group": "Arauco", "hex": "#383535"}, {"id": "arauco-fresno-bruma", "name": "Fresno Bruma", "brand": "Arauco", "group": "Arauco", "hex": "#857767"}, {"id": "arauco-precompuesto-ceniza", "name": "Precompuesto Ceniza", "brand": "Arauco", "group": "Arauco", "hex": "#9a8d85"}, {"id": "arauco-monarca", "name": "Monarca", "brand": "Arauco", "group": "Arauco", "hex": "#ad8e72"}, {"id": "arauco-nogal-neo", "name": "Nogal Neo", "brand": "Arauco", "group": "Arauco", "hex": "#856a5a"}, {"id": "arauco-roble-santana", "name": "Roble Santana", "brand": "Arauco", "group": "Arauco", "hex": "#a98f78"}, {"id": "arauco-negro-forest", "name": "Negro Forest", "brand": "Arauco", "group": "Arauco", "hex": "#1e1e1f"}, {"id": "arauco-copal", "name": "Copal", "brand": "Arauco", "group": "Arauco", "hex": "#c5ab86"}, {"id": "arauco-romero", "name": "Romero", "brand": "Arauco", "group": "Arauco", "hex": "#616e67"}, {"id": "arauco-tulum", "name": "Tulum", "brand": "Arauco", "group": "Arauco", "hex": "#b7b3b2"}, {"id": "arauco-sisal", "name": "Sisal", "brand": "Arauco", "group": "Arauco", "hex": "#e1d7ce"}, {"id": "arauco-filigrana", "name": "Filigrana", "brand": "Arauco", "group": "Arauco", "hex": "#c0b49e"}, {"id": "arauco-ambar", "name": "Ámbar", "brand": "Arauco", "group": "Arauco", "hex": "#95673e"}, {"id": "arauco-oporto", "name": "Oporto", "brand": "Arauco", "group": "Arauco", "hex": "#504339"}, {"id": "sabino-roble-lycan", "name": "Roble Lycan", "brand": "El Sabino", "group": "El Sabino", "hex": "#9f9a84"}, {"id": "sabino-roble-torne", "name": "Roble Torne", "brand": "El Sabino", "group": "El Sabino", "hex": "#3f4032"}, {"id": "sabino-olmo-ladera", "name": "Olmo Ladera", "brand": "El Sabino", "group": "El Sabino", "hex": "#ac9d7e"}, {"id": "sabino-olmo-mirra", "name": "Olmo Mirra", "brand": "El Sabino", "group": "El Sabino", "hex": "#b9a370"}, {"id": "sabino-olmo-amazonia", "name": "Olmo Amazonia", "brand": "El Sabino", "group": "El Sabino", "hex": "#645540"}, {"id": "sabino-olmo-foresta", "name": "Olmo Foresta", "brand": "El Sabino", "group": "El Sabino", "hex": "#a39069"}, {"id": "sabino-encino-arenal", "name": "Encino Arenal", "brand": "El Sabino", "group": "El Sabino", "hex": "#ac9b7a"}, {"id": "sabino-nogal-miel", "name": "Nogal Miel", "brand": "El Sabino", "group": "El Sabino", "hex": "#5c3b1f"}, {"id": "sabino-nogal-ahumado", "name": "Nogal Ahumado", "brand": "El Sabino", "group": "El Sabino", "hex": "#a08f72"}, {"id": "sabino-roble-anejo", "name": "Roble Añejo", "brand": "El Sabino", "group": "El Sabino", "hex": "#655741"}, {"id": "sabino-walnut", "name": "Walnut", "brand": "Kronospan", "group": "El Sabino", "hex": "#664026"}, {"id": "sabino-selene", "name": "Selene", "brand": "El Sabino", "group": "El Sabino", "hex": "#9e9884"}, {"id": "sabino-nuxta", "name": "Nuxta", "brand": "El Sabino", "group": "El Sabino", "hex": "#413525"}, {"id": "sabino-haya-blondie", "name": "Haya Blondie", "brand": "El Sabino", "group": "El Sabino", "hex": "#a97a4f"}, {"id": "sabino-nogal-alhambra", "name": "Nogal Alhambra", "brand": "El Sabino", "group": "El Sabino", "hex": "#623f23"}, {"id": "sabino-nogal-terrain", "name": "Nogal Terrain", "brand": "El Sabino", "group": "El Sabino", "hex": "#7a5b44"}, {"id": "sabino-roble-avellana", "name": "Roble Avellana", "brand": "El Sabino", "group": "El Sabino", "hex": "#724c2e"}, {"id": "sabino-haya-castena", "name": "Haya Casteña", "brand": "El Sabino", "group": "El Sabino", "hex": "#755b40"}];
+const swOf = id => SWATCHES.find(x=>x.id===id) || SWATCHES.find(x=>x.id==="arauco-nogal-britanico");
+let FIN = { mode:"color", sw:"arauco-nogal-britanico", brand:"Arauco" };
+try{ const f=JSON.parse(localStorage.getItem("fin_v2")); if(f) FIN=Object.assign(FIN,f); }catch(e){}
+function saveFin(){ try{localStorage.setItem("fin_v2",JSON.stringify(FIN))}catch(e){} }
+function pickSw(id){ FIN.sw=id; FIN.brand=swOf(id).group; saveFin(); render(); if(window.update3D) window.update3D(); }
+function shade(hex,amt){ // amt -1..1
+  let n=parseInt(hex.slice(1),16), r=n>>16, g=(n>>8)&255, b=n&255;
+  const f=v=>Math.max(0,Math.min(255,Math.round(amt<0? v*(1+amt) : v+(255-v)*amt)));
+  return "#"+((1<<24)+(f(r)<<16)+(f(g)<<8)+f(b)).toString(16).slice(1);
+}
+/* ===== Geometría de módulos (compartida por la vista terminada 2D y el 3D) =====
+   Coordenadas locales del muro: u = a lo largo (izq→der viendo el muro), y = altura, d = fondo desde el muro */
+const LOWT=new Set(["fijo","cajonbajo","cesto","lavabo","oculto","flotado","vanity1"]);
+function ceilOf(w){ const top = w.upperRow ? w.upperRow.y0+w.upperRow.h+1.5 : 211.5; return Math.max(260, top+20); }
+function wallParts(w, opts={}){
+  const P=[], T=1.5, Z=10;
+  const B=(u,y,d,du,dy,dd,k)=>{ if(du>0&&dy>0&&dd>0) P.push({t:'box',u,y,d,du,dy,dd,k}); };
+  const rod=(u0,u1,y,d)=>P.push({t:'rod',u0,u1,y,d});
+  const light=(u,y,d)=>P.push({t:'light',u,y,d});
+  const gap=Math.max(0,gapOf(w)), off = w.gapSide==="izq"?gap: w.gapSide==="ambos"?gap/2:0;
+  const ct = w.counter ? w.counter.t : 4;
+  const shell=(u0,ww,h,d,zoclo=true)=>{ const u1=u0+ww, z=zoclo?Z:0;
+    B(u0,z,0,T,h-z,d,'edge'); B(u1-T,z,0,T,h-z,d,'edge'); B(u0,h-T,0,ww,T,d,'edge');
+    B(u0+T,z,0,ww-2*T,T,d,'face'); B(u0+T,z+T,0,ww-2*T,h-z-2*T,0.6,'inner');
+    if(zoclo){ B(u0,0,0,ww,Z,d-3,'dark'); B(u0,0,d-3,ww,Z,1.5,'front'); } };
+  const shelves=(u0,ww,d,ys)=>ys.forEach(y=>B(u0+T,y,0,ww-2*T,1.8,d-1,'face'));
+  const ledTop=(u0,ww,h,d)=>{ B(u0+T,h-T-0.6,d-5,ww-2*T,0.6,1.5,'led'); light(u0+ww/2,h-10,d-10); };
+  const ledSides=(u0,ww,y0,y1,d)=>{ B(u0+T,y0,d-4,0.5,y1-y0,1.2,'led'); B(u0+ww-T-0.5,y0,d-4,0.5,y1-y0,1.2,'led'); light(u0+ww/2,(y0+y1)/2,d-12); };
+  const drawers=(u0,ww,y0,y1,d,n)=>{ const dh=(y1-y0)/n; for(let k=0;k<n;k++){ const a=y0+k*dh;
+    B(u0+T+0.2,a+0.2,d-1.8,ww-2*T-0.4,dh-3.4,1.8,'front'); B(u0+T,a+dh-3,d-6,ww-2*T,3,0.6,'dark'); } };
+  const corner=(m,h,D)=>{ const s=m.w, right=(m.side||'der')==='der', u0=m.x, u1=u0+s, a2=right?u1-D:u0;
+    B(u0,h-T,0,s,T,D,'edge'); B(a2,h-T,D,D,T,s-D,'edge'); B(u0,Z,0,s,T,D,'face'); B(a2,Z,D,D,T,s-D,'face');
+    B(u0,Z+T,0,s,h-Z-2*T,0.6,'inner'); B(right?u1-0.6:u0,Z+T,0.6,0.6,h-Z-2*T,s-0.6,'inner');
+    B(right?u0:u1-T,Z,0,T,h-Z,D,'edge'); B(a2,Z,s-T,D,h-Z,T,'edge');
+    B(right?u0:a2+D,0,0,s-D,Z,D-3,'dark'); B(right?u0:a2+D,0,D-3,s-D,Z,1.5,'front');
+    B(right?a2-1.5:a2+D,0,D,1.5,Z,s-D,'front'); B(a2,0,D,D,Z,s-D-1.5,'dark');
+    B(u0,h-T-0.6,D-5,s,0.6,1.5,'led');
+    const c=D/2, ca=right?u1-c:u0+c;
+    P.push({t:'lrod',y:h-14,pts:[[right?u0+T:u1-T,c],[ca+(right?-12:12),c],[ca,c],[ca,c+12],[ca,s-T]]});
+    light(ca,h-12,c+10); };
+  const mods_=layout(w).map(m=>({...m,x:m.x+off}));
+  const tallRanges=[];
+  mods_.forEach(m=>{
+    if(m.shared && opts.skipShared && opts.skipShared.has(m.shared)) return;
+    const u0=m.x, ww=m.w, u1=u0+ww, d=m.d||60, h=m.h||210;
+    if(h>=200 && m.type!=='tocador') tallRanges.push([u0,u1,h,d]);
+    if(m.type==='esquinero'){ corner(m,h,60); return; }
+    if(LOWT.has(m.type)){
+      const hb=h-(m.type==='oculto'&&!w.counter?0:ct);
+      if(m.type==='fijo'){ B(u0,0,0,ww,hb,d,'edge'); }
+      else if(m.type==='oculto'){ B(u0,0,0,ww,Z,d-3,'dark'); B(u0,0,d-3,ww,Z,1.5,'front'); B(u0,Z,0,ww,hb-Z,d,'edge'); }
+      // Lavabos: frentes y puertas SOBREPUESTOS (tapan los costados), sin gola, zoclo remetido
+      const FR=1.8, gp=0.3;
+      const GO=3;  // gola de madera arriba de cada frente
+      const overlay=(y0,y1,n,cols=1)=>{ const fh=(y1-y0)/n, fw=ww/cols;
+        for(let k=0;k<n;k++){ for(let c=0;c<cols;c++) B(u0+c*fw+gp/2, y0+k*fh+gp/2, d, fw-gp, fh-GO-gp, FR, 'front');
+          B(u0, y0+(k+1)*fh-GO, d-1, ww, GO, 1+FR*0.2, 'dark'); } };
+      if(m.type==='vanity1'){ const zh=(m.dh||12)+3.3; B(u0,hb-zh,0,ww,zh,d,'face'); overlay(hb-zh,hb,1); }
+      else if(m.type==='flotado'){ B(u0,30,0,ww,hb-30,d,'face'); overlay(30,hb,1); }
+      else { const u1=u0+ww;
+        B(u0,Z,0,T,hb-Z,d,'edge'); B(u1-T,Z,0,T,hb-Z,d,'edge'); B(u0,hb-T,0,ww,T,d,'edge');
+        B(u0+T,Z,0,ww-2*T,T,d,'face'); B(u0+T,Z+T,0,ww-2*T,hb-Z-2*T,0.6,'inner');
+        B(u0,0,0,ww,Z,d-5,'dark'); B(u0,0,d-5,ww,Z,1.5,'front');                       // zoclo remetido
+        if(m.type==='cajonbajo') overlay(Z,hb,3);
+        if(m.type==='cesto') overlay(Z,hb,1);
+        if(m.type==='lavabo') overlay(Z,hb,1,2);
+      }
+      return;
+    }
+    if(m.type==='tocador'){ // sin módulo: muro forrado + cajón flotado con cubierta
+      B(u0,0,0,ww,h+1.5,1.5,'face'); B(u0,76,1.5,ww,3,d-1.5,'face'); B(u0,57.7,1.5,ww,18.3,d-1.5-1.8,'face');
+      B(u0+0.3,58,d-1.8,ww-0.6,15,1.8,'front'); B(u0,73,d-1,ww,3,1,'dark'); return; }
+    shell(u0,ww,h,d);
+    if(m.type==='tubular'){ ledTop(u0,ww,h,d); rod(u0+T,u1-T,h-14,d/2); rod(u0+T,u1-T,h/2,d/2); }
+    if(m.type==='cajonero'){ drawers(u0,ww,Z+T,110,d,4); shelves(u0,ww,d,[110,110+(h-110)/3,110+2*(h-110)/3]); ledSides(u0,ww,112,h-T,d); }
+    if(m.type==='zapatero'){ const n=5, eh=(115-Z-T)/n; for(let k=0;k<n;k++){ const y0=Z+T+k*eh+1.5; B(u0+T+0.3,y0,1,ww-2*T-0.6,1.6,d-4,'face'); B(u0+T+0.3,y0,d-4.5,ww-2*T-0.6,6,1.5,'front'); }
+      shelves(u0,ww,d,[115,115+(h-115)/3,115+2*(h-115)/3]); ledSides(u0,ww,Z+T,h-T,d); }
+    if(m.type==='zaptub'){ ledTop(u0,ww,h,d); rod(u0+T,u1-T,h-14,d/2); shelves(u0,ww,d,[110]); for(let k=0;k<4;k++) shelves(u0,ww,d,[Z+T+22*(k+1)-22+20]); }
+    if(m.type==='zapfijo'){ shelves(u0,ww,d,[1,2,3,4,5,6,7].map(k=>Z+(h-Z)*k/8)); }
+    if(m.type==='entrepanero'){ shelves(u0,ww,d,[1,2,3,4,5].map(k=>Z+(h-Z)*k/6)); }
+  });
+  // cubierta (con hueco de tarja en lavabos)
+  if(w.counter){ const c=w.counter, y=c.h-c.t;
+    mods_.forEach(m=>{ if(!LOWT.has(m.type)||(m.shared&&opts.skipShared&&opts.skipShared.has(m.shared))) return;
+      const a=Math.max(m.x,c.from), b=Math.min(m.x+m.w,c.to); if(b<=a) return; const D=(m.d||55)+3.5, ch=Math.min(c.h, m.h||c.h)-c.t;
+      if(m.type!=='fijo') B(a,ch+c.t,0,b-a,10,2,'stone');                                   // copete de cuarzo
+      if(m.type==='lavabo'){ const cx=m.x+m.w/2, hw=Math.min(22,m.w/2-6);
+        B(a,ch,0,cx-hw-a,c.t,D,'stone'); B(cx+hw,ch,0,b-cx-hw,c.t,D,'stone'); B(cx-hw,ch,0,2*hw,c.t,9,'stone'); B(cx-hw,ch,43,2*hw,c.t,D-43,'stone');
+        B(cx-hw,ch-14,9,2*hw,14.2,34,'sink'); B(cx-1.5,ch+c.t,3,3,24,3,'metal'); B(cx-1.5,ch+c.t+21,3,3,3,13,'metal');
+      } else B(a,ch,0,b-a,c.t,D,'stone');
+    });
+  }
+  // torres sobre cubierta (de lado)
+  (w.upper||[]).forEach(u=>{ const opensRight = u.x < w.length/2, x0=u.x, x1=u.x+u.w;
+    B(x0,u.y0,0,u.w,T,u.d,'face'); B(x0,u.y0+u.h-T,0,u.w,T,u.d,'edge');
+    B(x0,u.y0,0,u.w,u.h,0.6,'inner'); B(x0,u.y0,u.d-T,u.w,u.h,T,'edge');           // fondo contra muro y costado de frente
+    B(opensRight?x0:x1-T,u.y0,0,T,u.h,u.d,'edge');                                   // lado cerrado
+    [1,2,3].forEach(k=>B(x0+(opensRight?T:0),u.y0+u.h*k/4,0.6,u.w-T,1.8,u.d-T-0.6,'face'));
+  });
+  // percheros elevables arriba
+  if(w.upperRow){ const r=w.upperRow, ug=w.gap||0, uw=(w.length-ug)/r.n;
+    for(let k=0;k<r.n;k++){ const u0=ug/2+k*uw; const sh=(a,ww,h,d,y0)=>{ B(a,y0,0,T,h,d,'edge'); B(a+ww-T,y0,0,T,h,d,'edge'); B(a,y0+h-T,0,ww,T,d,'edge'); B(a+T,y0,0,ww-2*T,T,d,'face'); B(a+T,y0+T,0,ww-2*T,h-2*T,0.6,'inner'); };
+      sh(u0,uw,r.h,r.d,r.y0+T); ledTop(u0,uw,r.y0+T+r.h,r.d); rod(u0+T+3,u0+uw-T-3,r.y0+r.h-14,r.d-8);
+      B(u0+T+3,r.y0+r.h-14,r.d-9,1,12,2,'metal'); B(u0+uw-T-4,r.y0+r.h-14,r.d-9,1,12,2,'metal'); }
+    B(ug/2,r.y0+r.h+T,0,w.length-ug,T,r.d,'edge');
+  }
+  // pieza extra arriba (doble grosor) y recubrimiento de melamina hasta plafón
+  const CEIL=ceilOf(w);
+  if(!w.upperRow) tallRanges.forEach(([a,b,h,dd])=>B(a,h,0,b-a,T,dd,'edge'));   // pieza extra con el fondo de cada módulo
+  if(tallRanges.length){ const allTall = mods_.every(m=>(m.h||210)>=200);
+    const a = allTall?0:Math.min(...tallRanges.map(r=>r[0])), b = allTall?w.length:Math.max(...tallRanges.map(r=>r[1]));
+    const top = w.upperRow ? w.upperRow.y0+w.upperRow.h+2*T : 210+T;
+    B(a,top,0,b-a,CEIL-top,1.5,'face'); }
+  return P;
+}
+
+/* ===== Vista terminada 2D: proyección de frente de las mismas piezas ===== */
+function finished(w){
+  const wire = FIN.mode==="wire", SW=swOf(FIN.sw), base=SW.hex;
+  const parts=wallParts(w), CEIL=ceilOf(w);
+  const S=2.3, L=Math.max(runLen(w),w.length||0), PL=30, PR=30, PT=20, PB=wire?70:24;
+  const X=c=>PL+c*S, Y=c=>PT+(CEIL-c)*S, id=w.id+(wire?"w":"c")+roomId;
+  let defs='';
+  if(!wire){ const tile=120*S, src=`img/sw/${SW.id}.jpg`;
+    const gp=(k,ov,op)=>`<pattern id="g${id}${k}" patternUnits="userSpaceOnUse" width="${tile}" height="${tile}"><image href="${src}" width="${tile}" height="${tile}" preserveAspectRatio="none"/>${op?`<rect width="${tile}" height="${tile}" fill="${ov}" opacity="${op}"/>`:""}</pattern>`;
+    defs = gp('face','#000',0)+gp('edge','#000',.12)+gp('inner','#000',.26)+gp('front','#000',.05)+
+      `<linearGradient id="rod${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f4f4"/><stop offset=".5" stop-color="#9a9a9a"/><stop offset="1" stop-color="#d6d6d6"/></linearGradient>
+      <filter id="glow${id}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+      <linearGradient id="mir${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef3f5"/><stop offset=".5" stop-color="#cfd9dd"/><stop offset="1" stop-color="#e6ecee"/></linearGradient>`; }
+  const fill=k=>{ if(wire) return '#fff';
+    return {face:`url(#g${id}face)`,edge:`url(#g${id}edge)`,inner:`url(#g${id}inner)`,front:`url(#g${id}front)`,dark:shade(base,-0.62),
+      led:'#fff6d8',stone:'#f1efea',sink:'#fbfbfb',metal:'#b8b8b8',mirror:`url(#mir${id})`}[k]||'#ccc'; };
+  const items=parts.filter(p=>p.t!=='light').map(p=>({p,key: p.t==='box'? p.d+p.dd : (p.t==='rod'? p.d : 30)})).sort((a,b)=>a.key-b.key);
+  let g=`<svg viewBox="0 0 ${L*S+PL+PR} ${CEIL*S+PT+PB}" xmlns="http://www.w3.org/2000/svg"><defs>${defs}</defs>
+  <rect x="${X(0)}" y="${Y(CEIL)}" width="${L*S}" height="${CEIL*S}" fill="${wire?'none':'#e9e7e3'}" ${wire?'stroke="#aaa" stroke-dasharray="4 3"':''}/>`;
+  let glow='';
+  items.forEach(({p})=>{
+    if(p.t==='box'){
+      if(p.k==='led'){ if(wire) g+=`<rect x="${X(p.u)}" y="${Y(p.y+p.dy)}" width="${Math.max(1,p.du*S)}" height="${Math.max(1,p.dy*S)}" fill="none" stroke="#d4a017" stroke-dasharray="3 2" stroke-width=".8"/>`;
+        else { glow+=`<rect x="${X(p.u)-2}" y="${Y(p.y+p.dy)-2}" width="${p.du*S+4}" height="${p.dy*S+4}" fill="#ffe7a8" opacity=".8" filter="url(#glow${id})"/>`; g+=`<rect x="${X(p.u)}" y="${Y(p.y+p.dy)}" width="${Math.max(1.5,p.du*S)}" height="${Math.max(1.5,p.dy*S)}" fill="#fff8e1"/>`; } return; }
+      g+=`<rect x="${X(p.u)}" y="${Y(p.y+p.dy)}" width="${p.du*S}" height="${p.dy*S}" fill="${fill(p.k)}" ${wire?'stroke="#333" stroke-width=".7"':(p.k==='stone'||p.k==='sink'?'stroke="#c9c6bf" stroke-width=".6"':'')}/>`;
+    } else if(p.t==='rod'){ g+= wire?`<line x1="${X(p.u0)}" y1="${Y(p.y)}" x2="${X(p.u1)}" y2="${Y(p.y)}" stroke="#333" stroke-width="2.2" stroke-linecap="round"/>`
+                                  :`<rect x="${X(p.u0)}" y="${Y(p.y)-2.5}" width="${(p.u1-p.u0)*S}" height="5" rx="2.5" fill="url(#rod${id})"/>`; }
+    else if(p.t==='lrod'){ const us=p.pts.map(q=>q[0]), a=Math.min(...us), b=Math.max(...us);
+      g+= wire?`<line x1="${X(a)}" y1="${Y(p.y)}" x2="${X(b)}" y2="${Y(p.y)}" stroke="#333" stroke-width="2.2"/>`:`<rect x="${X(a)}" y="${Y(p.y)-2.5}" width="${(b-a)*S}" height="5" rx="2.5" fill="url(#rod${id})"/>`; }
+  });
+  g+=glow;
+  g+=`<line x1="${X(-6)}" y1="${Y(0)}" x2="${X(L+6)}" y2="${Y(0)}" stroke="#1d1d1b" stroke-width="3"/>`;
+  if(wire){ const gap=Math.max(0,gapOf(w)), off=w.gapSide==="izq"?gap:w.gapSide==="ambos"?gap/2:0; let xx=off;
+    mods(w).forEach(m=>{ g+=dimH(X(xx),X(xx+m.w),Y(0)+22,f1(m.w),true,"#666",11); xx+=m.w; }); g+=dimH(X(0),X(L),Y(0)+52,`Muro ${w.length}`,true,"#444",11); }
+  return g+"</svg>";
+}
+
+function swPicker(){
+  const SW=swOf(FIN.sw), groups=["Arauco","El Sabino"];
+  return `<div class="pick">
+    <div class="pick-sel"><img src="img/sw/${SW.id}.jpg" alt=""><div><small>Melamina seleccionada</small><b>${SW.brand} · ${SW.name}</b></div></div>
+    <div class="seg">${groups.map(g=>`<button class="${FIN.brand===g?'on':''}" onclick="FIN.brand='${g}';saveFin();render()">${g}</button>`).join("")}</div>
+    <div class="swgrid">${SWATCHES.filter(x=>x.group===FIN.brand).map(x=>`<button class="swc ${x.id===SW.id?'on':''}" onclick="pickSw('${x.id}')"><img loading="lazy" src="img/sw/${x.id}.jpg" alt=""><span>${x.name}</span>${x.brand!==x.group?`<em>${x.brand}</em>`:""}</button>`).join("")}</div>
+  </div>`;
+}
+function finControls(){
+  return `<div class="fin">
+    <div class="seg"><button class="${FIN.mode==='wire'?'on':''}" onclick="FIN.mode='wire';saveFin();render()">Wireframe</button><button class="${FIN.mode==='color'?'on':''}" onclick="FIN.mode='color';saveFin();render()">Acabado</button><button onclick="cur='3d';render();window.scrollTo(0,0)">Vista 3D</button></div>
+  </div>${FIN.mode==='color'?swPicker():''}`;
+}
+/* ===== Colocación de cada muro en planta (para el 3D) =====
+   o = punto del muro donde empieza la vista de frente (u=0), U = dirección hacia la derecha viendo el muro */
+function layout3D(){
+  if(data.id==="principal"){ const r=data.plan, R=r.recess, Lr=r.C+r.door.from+r.door.w+r.doorToLav, dx0=r.C+r.door.from, dx1=dx0+r.door.w;
+    const bx0=r.A, bm=bx0+r.bath.wc, bx1=bm+r.bath.shower, by0=r.B-r.bath.depth;
+    return { walls:{ A:{o:[r.A,r.B],U:[-1,0]}, B:{o:[0,r.B],U:[0,-1]}, C:{o:[0,0],U:[1,0]}, L:{o:[Lr,-R],U:[0,1]}, V:{o:[Lr,r.B],U:[-1,0]} },
+      floor:[[0,0],[r.C,0],[r.C,-R],[Lr,-R],[Lr,r.B],[0,r.B]],
+      segs:[[0,0,r.C,0],[r.C,0,r.C,-R],[r.C,-R,dx0,-R],[dx1,-R,Lr,-R],[Lr,-R,Lr,r.B],[Lr,r.B,0,r.B],[0,r.B,0,0]],
+      extras:[[bx0-4,by0,8,r.bath.depth,0,220,'part'],[bm-4,by0,8,r.bath.depth,0,220,'part'],[bx1-4,by0,8,r.bath.depth,0,220,'part'],[bm,by0,r.bath.shower,1,0,200,'glass'],[bx0+50,r.B-70,40,60,0,40,'sink']] }; }
+  if(data.id==="rec1"){ const r=data.plan1, W=r.A, H=r.B, dEnt0=H-60-r.entryWall, bd0=W-r.ret, bd1=bd0-r.bathDoor;
+    return { walls:{ A:{o:[W,H],U:[-1,0]}, B:{o:[0,H],U:[0,-1]}, L:{o:[W,0],U:[0,1]} },
+      floor:[[0,0],[W,0],[W,H],[0,H]], segs:[[0,0,bd1,0],[bd0,0,W,0],[W,0,W,r.lav],[W,dEnt0,W,H],[W,H,0,H],[0,H,0,0]] }; }
+  if(data.id==="rec2"){ const r=data.plan2, L=r.L, W=r.W, d0=r.side.wall, d1=d0+r.side.door;
+    return { walls:{ A:{o:[0,0],U:[1,0]}, L:{o:[L,W],U:[-1,0]} },
+      floor:[[0,0],[L,0],[L,W],[0,W]], segs:[[0,0,L,0],[L,0,L,d0],[L,d1,L,W],[L,W,0,W],[0,W,0,d1],[0,d0,0,0]] }; }
+  if(data.id==="rec3"){ const r=data.plan3, L=r.A, Rz=r.recess, Wl=r.bath.wall1+r.bath.door+r.bath.wall2+Rz, b0=Rz+r.bath.wall1, b1=b0+r.bath.door, e0=r.entry.wall1, e1=Wl-r.entry.wall2;
+    return { walls:{ A:{o:[L,Wl],U:[-1,0]}, Z:{o:[0,Rz],U:[1,0]}, L:{o:[r.zap,0],U:[1,0]} },
+      floor:[[0,Rz],[r.zap,Rz],[r.zap,0],[L,0],[L,Wl],[0,Wl]],
+      segs:[[0,Rz,r.zap,Rz],[r.zap,Rz,r.zap,0],[r.zap,0,L,0],[L,0,L,e0],[L,e1,L,Wl],[L,Wl,0,Wl],[0,Wl,0,b1],[0,b0,0,Rz]] }; }
+  if(data.id==="huespedes"){ const w=data.walls[0];
+    return { walls:{ C:{o:[0,0],U:[1,0]} }, floor:[[0,0],[w.length,0],[w.length,240],[0,240]], segs:[[0,0,w.length,0],[w.length,0,w.length,240],[0,240,0,0]] }; }
+  return null;
+}
+let SEL3D={}; try{ SEL3D=JSON.parse(localStorage.getItem("sel3d_v1"))||{}; }catch(e){}
+function sel3D(){ const all=data.walls.map(w=>w.id); const s=SEL3D[roomId]; return (s&&s.length)? s.filter(x=>all.includes(x)) : all; }
+function toggle3D(id){ let s=sel3D(); s = s.includes(id)? s.filter(x=>x!==id) : [...s,id]; SEL3D[roomId]=s; try{localStorage.setItem("sel3d_v1",JSON.stringify(SEL3D))}catch(e){} render(); }
+function all3D(){ SEL3D[roomId]=data.walls.map(w=>w.id); try{localStorage.setItem("sel3d_v1",JSON.stringify(SEL3D))}catch(e){} render(); }
+function render3D(){
+  const s=sel3D();
+  return `<div class="card">
+    <div class="wallhead"><h2>Vista 3D — ${data.room}</h2><span class="badge">Arrastra para girar · rueda o pellizco para acercar</span></div>
+    <div class="fin"><span class="lbl">Muros a mostrar:</span>${data.walls.map(w=>`<button class="chip ${s.includes(w.id)?'on':''}" onclick="toggle3D('${w.id}')">${w.name.split(" — ")[0]}</button>`).join("")}<button class="chip" onclick="all3D()">Todos</button></div>
+    ${swPicker()}
+    <div id="v3d"><div class="v3d-msg">Cargando vista 3D…</div></div>
+    <div class="notes">Módulos con sus medidas reales: costados de 1.5 (doble en las uniones), pieza extra arriba, cajones interiores con gola, zoclo, recubrimiento de melamina hasta plafón y LED como en el render. Lavabos con cubierta y tarja bajo cubierta. La textura es la muestra del proveedor; el tono real puede variar, confirmar con muestra física.</div>
+  </div>`;
+}
+
+function renderWall(w,i){
+  const run=runLen(w), gap=gapOf(w);
+  const chk = w.length ? (gap>=0 ? `<span class="badge">Muro ${w.length} · muebles ${f1(run)} · holgura ${f1(gap)} cm ✓</span>` : `<span class="badge warn">Muro ${w.length} · muebles ${f1(run)} · faltan ${f1(-gap)} cm</span>`)
+                       : `<span class="badge warn">Recorrido ${f1(run)} cm · falta medida del muro</span>`;
+  return `<div class="card">
+    <div class="wallhead"><h2>${w.name}</h2><div>${chk}</div></div>
+    ${w.render?`<h3>Render de referencia — modelo 3D</h3>${refImg(w.render,"Modelo 3D del proyecto · "+w.name)}`:""}
+    ${true?`<h3>Vista terminada — cómo se verá instalado</h3>${finControls()}${finished(w)}
+    <div class="notes">Módulos independientes atornillados entre sí; la unión se cubre con cintilla doble después de instalar. Arriba se agrega una pieza extra a todo lo largo para que también se vea doble grosor (3 cm). Cajones interiores con perfil gola de madera. Muro superior con recubrimiento de melamina hasta plafón. LED como en el render.</div>`:""}
+    <h3>Vista de frente con medidas</h3>
+    ${elevation(w)}
+    <div class="legend"><span><i style="background:${INNER};border:1px solid ${WOOD_S}"></i>Módulo</span><span><i style="background:${WOOD};border:1px solid ${WOOD_S}"></i>Cajones / frentes</span><span><i class="led"></i>LED — igual que render</span><span><i style="background:#e6ddd0;border:1px dashed #9a8d7b"></i>Esquina</span></div>
+    ${calcBox(w)}
+    <h3>Vista de planta</h3>
+    ${wallPlan(w)}
+    <table><thead><tr><th>#</th><th>Módulo</th><th>Tipo</th><th>Ancho</th><th>Visible</th><th>Alto</th><th>Fondo</th></tr></thead><tbody>
+    ${mods(w).map((m,j)=>`<tr><td>${j+1}</td><td>${m.label}${m.shared?`<br><small>Mismo módulo del Muro ${m.shared}</small>`:""}</td><td>${TYPES[m.type]}${m.type==="zapatero"?"<br><small>5 extraíbles + 3 repisas fijas</small>":m.type==="tocador"?"<br><small>Sin módulo · cajón flotado · espejo no incluido</small>":m.auto?"<br><small>Medida calculada</small>":""}</td><td class="num">${m.type==="esquinero"?m.w+"×"+m.w:m.w}</td><td class="num">${m.type==="esquinero"?(m.vis??30):m.w}</td><td class="num">${m.h}${w.hPC?' <span class="pc">*</span>':""}</td><td class="num">${m.d}</td></tr>`).join("")}
+    ${w.upperRow?Array.from({length:w.upperRow.n},(_,k)=>`<tr><td>↑${k+1}</td><td>${w.upperRow.label} ${k+1}<br><small>Arriba (de ${w.upperRow.y0} a ${w.upperRow.y0+w.upperRow.h})</small></td><td>Perchero elevable</td><td class="num">${f1((w.length-(w.gap||0))/w.upperRow.n)}</td><td class="num">—</td><td class="num">${w.upperRow.h}</td><td class="num">${w.upperRow.d}</td></tr>`).join(""):""}
+    ${(w.upper||[]).map(u=>`<tr><td>↑</td><td>${u.label}<br><small>Sobre la cubierta (de ${u.y0} a ${u.y0+u.h})${u.sideways?" · de lado: módulo 40 × 30 girado":""}</small></td><td>Entrepañero</td><td class="num">${u.w}</td><td class="num">—</td><td class="num">${u.h}</td><td class="num">${u.d}</td></tr>`).join("")}
+    </tbody><tfoot><tr><td></td><td colspan="2">Recorrido total sobre el muro</td><td class="num">${f1(run)}</td><td class="num">${f1(mods(w).reduce((a,m)=>a+(m.type==="esquinero"?(m.vis??30):m.w),0))}</td><td></td><td></td></tr></tfoot></table>
+    <div class="notes">${w.low?"":"Altura total 210 = zoclo 10 + mueble 200. "}<strong>LED:</strong> misma especificación y ubicación que en el render.</div>
+    ${w.notes?`<div class="notes"><strong>Notas:</strong> ${w.notes}</div>`:""}
+    <details class="edit"><summary>Editar medidas</summary>
+      <table><tbody><tr>
+        <td>Largo muro</td><td><input type="number" step="0.5" value="${w.length??""}" placeholder="sin medir" onchange="data.walls[${i}].length=this.value?+this.value:null;save();render()"></td>
+        <td>Alto muro</td><td><input type="number" value="${w.height}" onchange="data.walls[${i}].height=+this.value;save();render()"></td>
+      </tr></tbody></table>
+      <table><thead><tr><th>Nombre</th><th>Tipo</th><th>Ancho</th><th>Visible</th><th>Alto</th><th>Fondo</th></tr></thead><tbody>
+      ${w.modules.map((m,j)=>`<tr>
+        <td><input value="${m.label}" onchange="upd(${i},${j},'label',this.value)"></td>
+        <td><select onchange="upd(${i},${j},'type',this.value)">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${m.type===k?"selected":""}>${v}</option>`).join("")}</select></td>
+        <td><input type="number" step="0.5" value="${m.auto?"":m.w}" placeholder="${m.auto?"auto":""}" ${m.auto?"disabled":""} onchange="upd(${i},${j},'w',+this.value)"></td>
+        <td><input type="number" value="${m.vis??""}" ${m.type!=="esquinero"?"disabled":""} onchange="upd(${i},${j},'vis',+this.value)"></td>
+        <td><input type="number" value="${m.h}" onchange="upd(${i},${j},'h',+this.value)"></td>
+        <td><input type="number" value="${m.d}" onchange="upd(${i},${j},'d',+this.value)"></td></tr>`).join("")}
+      </tbody></table>
+      <p><button class="btn" onclick="try{localStorage.removeItem(KEY)}catch(e){};data=structuredClone(ROOMS[roomId]);render()">Restaurar original</button></p>
+    </details>
+  </div>`;
+}
+
+function render(){
+  document.getElementById("proom").innerHTML=Object.values(ROOMS).map(r=>`<button class="rbtn ${r.id===roomId?"on":""}" onclick="loadRoom('${r.id}');render()">${r.room}</button>`).join("");
+  document.getElementById("ptitle").textContent=data.room+" — "+data.title.replace(" — Medidas para autorización","");
+  document.getElementById("psub").textContent=data.subtitle;
+  const tabs=[["planta","Planta general"],...data.walls.map(w=>[w.id,w.name]),["3d","Vista 3D"],["todo","Ver todo"]];
+  document.getElementById("tabs").innerHTML=tabs.map(([k,v])=>`<button class="tab ${cur===k?"on":""}" onclick="cur='${k}';render()">${v}</button>`).join("");
+  let html="";
+    if(cur==="3d") html+=render3D();
+  if(cur==="planta"||cur==="todo") html+=renderPlanta();
+  data.walls.forEach((w,i)=>{ if(cur==="todo"||cur===w.id) html+=renderWall(w,i); });
+  document.getElementById("view").innerHTML=html;
+  if(cur==="3d"){ if(window.init3D) window.init3D(); else window.__want3D=true; } else if(window.dispose3D) window.dispose3D();
+}
+function upd(i,j,k,v){ data.walls[i].modules[j][k]=v; save(); render(); }
+render();
+</script>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+let ctx=null;
+const TILE=60;
+function scaleUV(geo,w,h,d){ const uv=geo.attributes.uv, dims=[[d,h],[d,h],[w,d],[w,d],[w,h],[w,h]];
+  for(let f=0;f<6;f++) for(let v=0;v<4;v++){ const i=f*4+v; uv.setXY(i, uv.getX(i)*dims[f][0]/TILE, uv.getY(i)*dims[f][1]/TILE); } uv.needsUpdate=true; }
+function inPoly(pt,poly){ let c=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++){ const [xi,yi]=poly[i],[xj,yj]=poly[j];
+  if(((yi>pt[1])!==(yj>pt[1])) && (pt[0] < (xj-xi)*(pt[1]-yi)/(yj-yi)+xi)) c=!c; } return c; }
+window.dispose3D=function(){ if(!ctx) return; cancelAnimationFrame(ctx.raf); ctx.ro.disconnect(); ctx.renderer.dispose(); ctx.scene.traverse(o=>{ if(o.geometry) o.geometry.dispose(); }); ctx=null; };
+function loadTex(){ const t=new THREE.TextureLoader().load(`img/sw/${swOf(FIN.sw).id}.jpg`); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=8; return t; }
+window.update3D=function(){ if(!ctx) return; const t=loadTex(); Object.values(ctx.mats).forEach(m=>{ if(m.userData.wood){ m.map=t; m.needsUpdate=true; } }); };
+window.init3D=function(){
+  const host=document.getElementById('v3d'); if(!host) return;
+  window.dispose3D(); host.innerHTML='';
+  const lay=layout3D(); if(!lay){ host.innerHTML='<div class="v3d-msg">Sin vista 3D para esta recámara</div>'; return; }
+  const renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(2,window.devicePixelRatio));
+  renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
+  renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  host.appendChild(renderer.domElement);
+  const scene=new THREE.Scene(); scene.background=new THREE.Color(0xdedbd5);
+  const camera=new THREE.PerspectiveCamera(50,1,1,6000);
+  const controls=new OrbitControls(camera,renderer.domElement); controls.enableDamping=true; controls.maxPolarAngle=Math.PI*0.53; controls.minDistance=50; controls.maxDistance=1600;
+  scene.add(new THREE.HemisphereLight(0xffffff,0xb9b2a6,0.95));
+  const tex=loadTex();
+  const wood=c=>{ const m=new THREE.MeshStandardMaterial({map:tex,color:c,roughness:.62}); m.userData.wood=true; return m; };
+  const mats={ face:wood(0xffffff), edge:wood(0xe9e9e9), inner:wood(0xbdbdbd), front:wood(0xf6f6f6),
+    dark:new THREE.MeshStandardMaterial({color:0x1c1a18,roughness:.8}),
+    metal:new THREE.MeshStandardMaterial({color:0xd8d8d8,metalness:.9,roughness:.25}),
+    led:new THREE.MeshStandardMaterial({color:0xfff1c8,emissive:0xffe1a0,emissiveIntensity:2.2}),
+    stone:new THREE.MeshStandardMaterial({color:0xf2f1ed,roughness:.25}),
+    sink:new THREE.MeshStandardMaterial({color:0xfbfbfb,roughness:.15}),
+    mirror:new THREE.MeshStandardMaterial({color:0xcfdde2,metalness:.8,roughness:.08}),
+    wall:new THREE.MeshStandardMaterial({color:0xeceae6,roughness:.95}),
+    part:new THREE.MeshStandardMaterial({color:0xf4f4f2,roughness:.9}),
+    glass:new THREE.MeshStandardMaterial({color:0xcfe3e8,transparent:true,opacity:.25,roughness:.05}),
+    floor:new THREE.MeshStandardMaterial({color:0xd4d2cd,roughness:.35,side:THREE.DoubleSide}) };
+  const furn=new THREE.Group(); scene.add(furn);
+  const show=new Set(sel3D()), skip=new Set([...show]);
+  let nAvg=new THREE.Vector3();
+  data.walls.forEach(w=>{ if(!show.has(w.id)) return; const pl=lay.walls[w.id]; if(!pl) return;
+    const g=new THREE.Group(); g.position.set(pl.o[0],0,pl.o[1]); g.rotation.y=Math.atan2(-pl.U[1],pl.U[0]); furn.add(g);
+    nAvg.add(new THREE.Vector3(-pl.U[1],0,pl.U[0]));
+    wallParts(w,{skipShared:skip}).forEach(p=>{
+      if(p.t==='box'){ const geo=new THREE.BoxGeometry(p.du,p.dy,p.dd); const mt=mats[p.k]||mats.face; if(mt.userData.wood) scaleUV(geo,p.du,p.dy,p.dd);
+        const m=new THREE.Mesh(geo,mt); m.position.set(p.u+p.du/2,p.y+p.dy/2,p.d+p.dd/2); m.castShadow=p.k!=='led'; m.receiveShadow=true; g.add(m); }
+      else if(p.t==='rod'){ const m=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,p.u1-p.u0,16),mats.metal); m.rotation.z=Math.PI/2; m.position.set((p.u0+p.u1)/2,p.y,p.d); m.castShadow=true; g.add(m); }
+      else if(p.t==='lrod'){ const v=p.pts.map(q=>new THREE.Vector3(q[0],p.y,q[1])); const path=new THREE.CurvePath();
+        path.add(new THREE.LineCurve3(v[0],v[1])); path.add(new THREE.QuadraticBezierCurve3(v[1],v[2],v[3])); path.add(new THREE.LineCurve3(v[3],v[4]));
+        const m=new THREE.Mesh(new THREE.TubeGeometry(path,60,1.2,12,false),mats.metal); m.castShadow=true; g.add(m); }
+      else if(p.t==='light'){ const l=new THREE.PointLight(0xffd9a0,2000,150,2); l.position.set(p.u,p.y,p.d); g.add(l); }
+    });
+  });
+  // cuarto: piso, muros (se ven solo por dentro), extras
+  const poly=lay.floor, CEIL=Math.max(...data.walls.map(ceilOf));
+  const shp=new THREE.Shape(poly.map(p=>new THREE.Vector2(p[0],p[1])));
+  const fl=new THREE.Mesh(new THREE.ShapeGeometry(shp),mats.floor); fl.rotation.x=Math.PI/2; fl.receiveShadow=true; scene.add(fl);
+  lay.segs.forEach(([x0,y0,x1,y1])=>{ const len=Math.hypot(x1-x0,y1-y0); if(len<1) return;
+    const mx=(x0+x1)/2, my=(y0+y1)/2, ux=(x1-x0)/len, uy=(y1-y0)/len; let nx=-uy, ny=ux;
+    if(!inPoly([mx+nx*5,my+ny*5],poly)){ nx=-nx; ny=-ny; }
+    const m=new THREE.Mesh(new THREE.PlaneGeometry(len,CEIL),mats.wall); m.position.set(mx-nx*0.6,CEIL/2,my-ny*0.6);
+    m.rotation.y=Math.atan2(nx,ny); m.receiveShadow=true; scene.add(m); });
+  (lay.extras||[]).forEach(e=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(e[2],e[5],e[3]),mats[e[6]]); m.position.set(e[0]+e[2]/2,e[4]+e[5]/2,e[1]+e[3]/2); m.castShadow=e[6]!=='glass'; scene.add(m); });
+  // sol + cámara encuadrada a lo visible
+  const box=new THREE.Box3().setFromObject(furn); if(box.isEmpty()) box.setFromObject(fl);
+  const ctr=box.getCenter(new THREE.Vector3()), sz=box.getSize(new THREE.Vector3());
+  let dir = nAvg.lengthSq()>0.01 ? nAvg.normalize() : new THREE.Vector3(0,0,1);
+  if(nAvg.lengthSq()<=0.01 && show.size>1){ const any=data.walls.find(w=>show.has(w.id)); const pl=lay.walls[any.id]; dir=new THREE.Vector3(pl.U[0],0,pl.U[1]); }
+  const dist=Math.max(sz.x,sz.z,180)*1.05+120;
+  const ns=data.walls.filter(w=>show.has(w.id)&&lay.walls[w.id]).map(w=>{ const U=lay.walls[w.id].U; return [-U[1],U[0]]; });
+  const opposing = ns.some(a=>ns.some(b=>a[0]*b[0]+a[1]*b[1]<-0.5));
+  if(opposing){ const d2=dir.lengthSq()>0.01?dir:new THREE.Vector3(0,0,1); camera.position.copy(ctr).addScaledVector(d2,dist*0.35).add(new THREE.Vector3(0,dist*1.05,0)); }
+  else camera.position.copy(ctr).addScaledVector(dir,dist).add(new THREE.Vector3(0,dist*0.38,0)); controls.target.copy(ctr).setY(100);
+  const sun=new THREE.DirectionalLight(0xffffff,1.0); sun.position.copy(ctr).addScaledVector(dir,500).add(new THREE.Vector3(-150,450,0)); sun.target.position.copy(ctr);
+  sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-600,right:600,top:600,bottom:-600,near:10,far:2000}); sun.shadow.bias=-0.0005; scene.add(sun,sun.target);
+  function size(){ const r=host.getBoundingClientRect(); renderer.setSize(r.width,r.height,false); camera.aspect=r.width/Math.max(1,r.height); camera.updateProjectionMatrix(); }
+  const ro=new ResizeObserver(size); ro.observe(host); size();
+  ctx={renderer,scene,camera,controls,ro,mats,raf:0};
+  const loop=()=>{ ctx.raf=requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); }; loop();
+};
+if(window.__want3D){ window.__want3D=false; window.init3D(); }
+</script>
+
+</body>
+</html>
